@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:gravity="center"
+              >
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        android:stretchColumns="1">
+        <TableRow>
+            <TextView android:text="@string/account"/>
+            <EditText android:id="@+id/register_account"/>
+        </TableRow>
+        <TableRow>
+            <TextView android:text="@string/password"/>
+            <EditText android:id="@+id/register_passwordEditext"/>
+        </TableRow>
+        <TableRow>
+            <TextView android:text="@string/register_passwordConfirm"/>
+            <EditText android:id="@+id/register_passwordConfirmEditText"/>
+        </TableRow>
+    </TableLayout>
+    <Button
+        android:id="@+id/register_confirmButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/register_confirm"/>
+
+</LinearLayout>

@@ -51,7 +51,12 @@ public class User {
         json.put(JSON_USER_GRADE, userGrade.name());
         return json;
     }
-
+    public User(){};
+    public User(String userID, String userPassword) {
+        this.userID = userID;
+        this.userPassword = userPassword;
+        this.userGrade = grade.REGULARUSER;
+    }
     public User(JSONObject json) throws JSONException {
         userID = json.getString(JSON_USER_ID);
         userPassword = json.getString(JSON_USER_PASSWORD);

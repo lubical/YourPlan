@@ -85,7 +85,7 @@ public class RegisterFragment extends Fragment{
                 String account = mEditText_account.getText().toString().trim();
                 String password = mEditText_password.getText().toString().trim();
                 String confirmpassword = mEditText_confirmpassword.getText().toString().trim();
-                if (account == null || password == null || confirmpassword == null) {
+                if (account.length() == 0 || password.length() == 0 || confirmpassword.length() == 0) {
                     Toast.makeText(getActivity(), "信息不完整，请补充", Toast.LENGTH_SHORT).show();
                     return;
                 }

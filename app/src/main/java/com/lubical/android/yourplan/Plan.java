@@ -30,11 +30,15 @@ public class Plan {
     private boolean planPrivate;
     private Date planStartTime;
     private Date planEndTime;
-    private boolean planRemind;
-    private int planRepeatFrequency;
-    private int planStatue;
+    private String planRemind;
+    private int planRepeatFrequency;      //任务周期数
+    private int planStatue;               //任务状态
     private int planImportantUrgent;
-
+    private String planClassify;             //任务项目，分类
+    public static final int IMPORTANT_URGENT = 0;
+    public static final int UNIMPORTANT_URGENT = 1;
+    public static final int IMPORTANT_NOTURGENT = 2;
+    public static final int UNIMPORTANT_NOTURGENT = 3;
     public JSONObject toJSON() throws JSONException {
         JSONObject json = new JSONObject();
         json.put(JSON_USER_ID, userID);
@@ -66,7 +70,7 @@ public class Plan {
         planPrivate = json.getBoolean(JSON_PLAN_PRIVATE);
         planStartTime = new Date(json.getLong(JSON_PLAN_START_TIME));
         planEndTime = new Date(json.getLong(JSON_PLAN_END_TIME));
-        planRemind = json.getBoolean(JSON_PLAN_REMIND);
+        planRemind = json.getString(JSON_PLAN_REMIND);
         planRepeatFrequency = json.getInt(JSON_PLAN_REPEATFREQUENCY);
         planStatue = json.getInt(JSON_PLAN_STATUE);
         planImportantUrgent = json.getInt(JSON_PLAN_IMPORT_URGENT);
@@ -119,16 +123,16 @@ public class Plan {
         this.planEndTime = planEndTime;
     }
 
-    public boolean isPlanRemind() {
+    public int getPlanRepeatFrequency() {
+        return planRepeatFrequency;
+    }
+
+    public String getPlanRemind() {
         return planRemind;
     }
 
-    public void setPlanRemind(boolean planRemind) {
+    public void setPlanRemind(String planRemind) {
         this.planRemind = planRemind;
-    }
-
-    public int getPlanRepeatFrequency() {
-        return planRepeatFrequency;
     }
 
     public void setPlanRepeatFrequency(int planRepeatFrequency) {

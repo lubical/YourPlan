@@ -3,10 +3,92 @@
               android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="match_parent">
-    <TextView
-        android:id="@+id/fragment_plan_nameTextView"
+    <EditText
+        android:id="@+id/fragment_plan_nameET"
+        android:padding="2dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
-
+    <RadioGroup
+        android:id="@+id/fragment_plan_rg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <RadioButton
+            android:id="@+id/fragment_plan_rbIU"
+            android:button="@null"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="I_U"
+            android:textColor="@color/tab_selector_iu_color"
+            android:background="@null"/>
+        <RadioButton
+            android:id="@+id/fragment_plan_rbNIU"
+            android:button="@null"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="UnI_U"
+            android:textColor="@color/tab_selector_niu_color"
+            android:background="@null"/>
+        <RadioButton
+            android:id="@+id/fragment_plan_rbINU"
+            android:button="@null"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="I_NotU"
+            android:textColor="@color/tab_selector_inu_color"
+            android:background="@null"/>
+        <RadioButton
+            android:id="@+id/fragment_plan_rbNINU"
+            android:button="@null"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="UnI_NotU"
+            android:textColor="@color/tab_selector_ninu_color"
+            android:background="@null"/>
+    </RadioGroup>
+    <Button
+        android:id="@+id/fragment_plan_dateTimeBt"
+        android:background="@null"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+    <Button
+        android:id="@+id/fragment_plan_remindBt"
+        android:background="@null"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+    <Button
+         android:id="@+id/frgment_plan_classifyBt"
+         android:background="@null"
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"/>
+    <EditText
+        android:id="@+id/fragment_plan_frequency"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="完成进度"/>
+        <ProgressBar
+            android:id="@+id/fragment_plan_progressBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            style="?android:progressBarStyleHorizontal"
+            android:max="100"/>
+    </LinearLayout>
+    <Button
+        android:id="@+id/fragment_plan_finishToday"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="今日打卡"/>
 </LinearLayout>

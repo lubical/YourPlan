@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <Button
+        android:id="@+id/fragment_datetimepicker_startButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="开始 xxxx年xx月xx日 xx:xx"/>
+    <LinearLayout
+        android:id="@+id/fragment_datetimepicker_startLinearLayout"
+        android:visibility="visible"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <DatePicker
+            android:id="@+id/fragment_datetimepicker_startDatePicker"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:calendarViewShown="false"
+            android:datePickerMode="spinner"></DatePicker>
+        <TimePicker
+            android:id="@+id/fragment_datetimepicker_startTimePicker"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:timePickerMode="spinner"></TimePicker>
+    </LinearLayout>
+    <Button
+        android:id="@+id/fragment_datetimepicker_endButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="结束 xxxx年xx月xx日 xx:xx"/>
+    <LinearLayout
+        android:id="@+id/fragment_datetimepicker_endLinearLayout"
+        android:visibility="gone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <DatePicker
+            android:id="@+id/fragment_datetimepicker_endDatePicker"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:calendarViewShown="false"
+            android:datePickerMode="spinner"></DatePicker>
+        <TimePicker
+            android:id="@+id/fragment_datetimepicker_endTimePicker"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:timePickerMode="spinner"></TimePicker>
+    </LinearLayout>
+</LinearLayout>

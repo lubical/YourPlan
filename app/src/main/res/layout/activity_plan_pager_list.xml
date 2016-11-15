@@ -20,32 +20,36 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:text="重要紧急"
-            android:background="@color/tab_selector_iu_color"/>
+            android:text="I_U"
+            android:textColor="@color/tab_selector_iu_color"
+            android:background="@null"/>
         <RadioButton
             android:id="@+id/activity_plan_pagerr_list_rbNIU"
             android:button="@null"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:text="紧急不重要"
-            android:background="@color/tab_selector_niu_color"/>
+            android:text="UnI_U"
+            android:textColor="@color/tab_selector_niu_color"
+            android:background="@null"/>
         <RadioButton
             android:id="@+id/activity_plan_pagerr_list_rbINU"
             android:button="@null"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:text="重要不紧急"
-            android:background="@color/tab_selector_inu_color"/>
+            android:text="I_NotU"
+            android:textColor="@color/tab_selector_inu_color"
+            android:background="@null"/>
         <RadioButton
             android:id="@+id/activity_plan_pagerr_list_rbNINU"
             android:button="@null"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:text="不重要不紧急"
-            android:background="@color/tab_selector_ninu_color"/>
+            android:text="UnI_NotU"
+            android:textColor="@color/tab_selector_ninu_color"
+            android:background="@null"/>
     </RadioGroup>
 
 

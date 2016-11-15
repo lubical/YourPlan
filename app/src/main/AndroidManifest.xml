@@ -16,6 +16,9 @@
             </intent-filter>
         </activity>
         <activity android:name=".RegisterActivity"></activity>
+        <activity android:name=".PlanListPagerActivity"></activity>
+        <activity android:name=".PlanListActivity"></activity>
+        <activity android:name=".PlanActivity"></activity>
     </application>
 
 </manifest>

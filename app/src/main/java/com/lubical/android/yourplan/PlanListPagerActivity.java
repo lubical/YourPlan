@@ -10,6 +10,8 @@ import android.widget.RadioGroup;
 import java.util.ArrayList;
 import java.util.List;
 
+import static android.os.Build.VERSION_CODES.N;
+
 /**
  * Created by lubical on 2016/11/11.
  */
@@ -22,16 +24,11 @@ public class PlanListPagerActivity extends FragmentActivity {
     private RadioButton mRadioButtonINU;
     private RadioButton mRadioButtonNINU;
     private List<PlanListFragment> mPlanListFragments = new ArrayList<PlanListFragment>();
-    private static final int Important_Urgent = 0;
-    private static final int NoImportant_Urgent = 1;
-    private static final int Important_NoUrgent = 2;
-    private static final int NoImportant_NoUrgent = 3;
     private String mUserId;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_plan_pager_list);
-
-        mUserId = savedInstanceState.getString(LoginFragment.EXTRA_USER_ID);
+        mUserId = getIntent().getStringExtra(LoginFragment.EXTRA_USER_ID);
         PlanLab.get(getApplicationContext(), mUserId);
         initViews();
         initEvent();
@@ -42,10 +39,10 @@ public class PlanListPagerActivity extends FragmentActivity {
         mRadioButtonINU = (RadioButton)findViewById(R.id.activity_plan_pagerr_list_rbINU);
         mRadioButtonNIU = (RadioButton)findViewById(R.id.activity_plan_pagerr_list_rbNIU);
         mRadioButtonNINU = (RadioButton)findViewById(R.id.activity_plan_pagerr_list_rbNINU);
-        PlanListFragment pe_iu = PlanListFragment.newInstance(Important_Urgent);
-        PlanListFragment pe_niu = PlanListFragment.newInstance(NoImportant_Urgent);
-        PlanListFragment pe_inu = PlanListFragment.newInstance(Important_NoUrgent);
-        PlanListFragment pe_ninu = PlanListFragment.newInstance(NoImportant_NoUrgent);
+        PlanListFragment pe_iu = PlanListFragment.newInstance(Plan.IMPORTANT_URGENT);
+        PlanListFragment pe_niu = PlanListFragment.newInstance(Plan.UNIMPORTANT_URGENT);
+        PlanListFragment pe_inu = PlanListFragment.newInstance(Plan.IMPORTANT_NOTURGENT);
+        PlanListFragment pe_ninu = PlanListFragment.newInstance(Plan.UNIMPORTANT_NOTURGENT);
         mPlanListFragments.add(pe_iu);
         mPlanListFragments.add(pe_inu);
         mPlanListFragments.add(pe_niu);
@@ -61,19 +58,19 @@ public class PlanListPagerActivity extends FragmentActivity {
             public void onCheckedChanged(RadioGroup group, int chckedId) {
                 switch (chckedId) {
                     case R.id.activity_plan_pagerr_list_rbIU:
-                        mViewPager.setCurrentItem(Important_Urgent);
+                        mViewPager.setCurrentItem(Plan.IMPORTANT_URGENT);
                         break;
                     case R.id.activity_plan_pagerr_list_rbINU:
-                        mViewPager.setCurrentItem(Important_NoUrgent);
+                        mViewPager.setCurrentItem(Plan.IMPORTANT_NOTURGENT);
                         break;
                     case R.id.activity_plan_pagerr_list_rbNIU:
-                        mViewPager.setCurrentItem(NoImportant_Urgent);
+                        mViewPager.setCurrentItem(Plan.UNIMPORTANT_URGENT);
                         break;
                     case R.id.activity_plan_pagerr_list_rbNINU:
-                        mViewPager.setCurrentItem(NoImportant_NoUrgent);
+                        mViewPager.setCurrentItem(Plan.UNIMPORTANT_NOTURGENT);
                         break;
                     default:
-                        mViewPager.setCurrentItem(Important_Urgent);
+                        mViewPager.setCurrentItem(Plan.IMPORTANT_URGENT);
                         break;
                 }
             }
@@ -90,16 +87,16 @@ public class PlanListPagerActivity extends FragmentActivity {
 
         public void onPageSelected(int position) {
             switch (position) {
-                case Important_Urgent:
+                case Plan.IMPORTANT_URGENT:
                     mRadioButtonIU.setChecked(true);
                     break;
-                case NoImportant_Urgent:
+                case Plan.UNIMPORTANT_URGENT:
                     mRadioButtonNIU.setChecked(true);
                     break;
-                case Important_NoUrgent:
+                case Plan.IMPORTANT_NOTURGENT:
                     mRadioButtonINU.setChecked(true);
                     break;
-                case NoImportant_NoUrgent:
+                case Plan.UNIMPORTANT_NOTURGENT:
                     mRadioButtonNINU.setChecked(true);
                     break;
                 default:

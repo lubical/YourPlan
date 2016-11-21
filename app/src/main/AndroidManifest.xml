@@ -11,14 +11,25 @@
         <activity android:name=".LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
-
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".RegisterActivity"></activity>
-        <activity android:name=".PlanListPagerActivity"></activity>
-        <activity android:name=".PlanListActivity"></activity>
-        <activity android:name=".PlanActivity"></activity>
+        <activity android:name=".RegisterActivity">
+            <meta-data android:name="android.support.PARENT_ACTIVITY"
+                       android:value=".LoginActivity"></meta-data>
+        </activity>
+        <activity android:name=".PlanListPagerActivity">
+        </activity>
+        <activity android:name=".PlanActivity">
+            <meta-data android:name="android.support.PARENT_ACTIVITY"
+                       android:value=".PlanListPagerActivity"></meta-data>
+        </activity>
+        <activity android:name=".PlanRemindActivity">
+        </activity>
+        <activity android:name=".PlanClassifyListActivity">
+            <meta-data android:name="android.support.PARENT_ACTIVITY"
+                       android:value=".PlanActivity"></meta-data>
+        </activity>
     </application>
 
 </manifest>

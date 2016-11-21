@@ -3,10 +3,12 @@ package com.lubical.android.yourplan;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.NavUtils;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.method.PasswordTransformationMethod;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -30,6 +32,7 @@ public class RegisterFragment extends Fragment{
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     @Override
@@ -104,4 +107,15 @@ public class RegisterFragment extends Fragment{
         return v;
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                if (NavUtils.getParentActivityName(getActivity()) != null) {
+                    NavUtils.navigateUpFromSameTask(getActivity());
+                    return true;
+                }
+        }
+        return super.onOptionsItemSelected(item);
+    }
 }

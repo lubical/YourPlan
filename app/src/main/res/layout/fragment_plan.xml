@@ -7,7 +7,8 @@
         android:id="@+id/fragment_plan_nameET"
         android:padding="2dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:gravity="left"/>
 
     <RadioGroup
         android:id="@+id/fragment_plan_rg"
@@ -55,21 +56,37 @@
         android:id="@+id/fragment_plan_dateTimeBt"
         android:background="@null"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:gravity="left"/>
     <Button
         android:id="@+id/fragment_plan_remindBt"
         android:background="@null"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:gravity="left"/>
     <Button
          android:id="@+id/frgment_plan_classifyBt"
          android:background="@null"
          android:layout_width="match_parent"
-         android:layout_height="wrap_content"/>
-    <EditText
-        android:id="@+id/fragment_plan_frequency"
+         android:layout_height="wrap_content"
+        android:gravity="left"
+        android:text="未分类"/>
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="任务完成所需周期数："/>
+        <EditText
+            android:id="@+id/fragment_plan_frequency"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="number|none"
+            android:gravity="left"/>
+    </LinearLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

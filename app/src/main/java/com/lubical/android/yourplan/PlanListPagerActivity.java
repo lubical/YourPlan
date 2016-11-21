@@ -1,12 +1,17 @@
 package com.lubical.android.yourplan;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.NavUtils;
 import android.support.v4.view.ViewPager;
+import android.view.MenuItem;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Toast;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,10 +30,18 @@ public class PlanListPagerActivity extends FragmentActivity {
     private RadioButton mRadioButtonNINU;
     private List<PlanListFragment> mPlanListFragments = new ArrayList<PlanListFragment>();
     private String mUserId;
+    private static final String USER_ID = "userId";
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_plan_pager_list);
-        mUserId = getIntent().getStringExtra(LoginFragment.EXTRA_USER_ID);
+       // getActionBar().setDisplayHomeAsUpEnabled(true);
+        if (savedInstanceState ==null) {
+            mUserId = getIntent().getStringExtra(LoginFragment.EXTRA_USER_ID);
+        } else {
+            mUserId = savedInstanceState.getString(USER_ID);
+        }
+        mUserId = PlanLab.getmUserId();
+        Toast.makeText(getApplicationContext(), mUserId +"lalalalala", Toast.LENGTH_SHORT).show();
         PlanLab.get(getApplicationContext(), mUserId);
         initViews();
         initEvent();
@@ -39,10 +52,10 @@ public class PlanListPagerActivity extends FragmentActivity {
         mRadioButtonINU = (RadioButton)findViewById(R.id.activity_plan_pagerr_list_rbINU);
         mRadioButtonNIU = (RadioButton)findViewById(R.id.activity_plan_pagerr_list_rbNIU);
         mRadioButtonNINU = (RadioButton)findViewById(R.id.activity_plan_pagerr_list_rbNINU);
-        PlanListFragment pe_iu = PlanListFragment.newInstance(Plan.IMPORTANT_URGENT);
-        PlanListFragment pe_niu = PlanListFragment.newInstance(Plan.UNIMPORTANT_URGENT);
-        PlanListFragment pe_inu = PlanListFragment.newInstance(Plan.IMPORTANT_NOTURGENT);
-        PlanListFragment pe_ninu = PlanListFragment.newInstance(Plan.UNIMPORTANT_NOTURGENT);
+        PlanListFragment pe_iu = PlanListFragment.newInstance(Plan.IMPORTANT_URGENT, mUserId);
+        PlanListFragment pe_niu = PlanListFragment.newInstance(Plan.UNIMPORTANT_URGENT, mUserId);
+        PlanListFragment pe_inu = PlanListFragment.newInstance(Plan.IMPORTANT_NOTURGENT, mUserId);
+        PlanListFragment pe_ninu = PlanListFragment.newInstance(Plan.UNIMPORTANT_NOTURGENT, mUserId);
         mPlanListFragments.add(pe_iu);
         mPlanListFragments.add(pe_inu);
         mPlanListFragments.add(pe_niu);
@@ -118,4 +131,22 @@ public class PlanListPagerActivity extends FragmentActivity {
         }
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                if (NavUtils.getParentActivityName(this) != null) {
+                    //NavUtils.navigateUpFromSameTask(this);
+                    return true;
+                }
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+        savedInstanceState.putString(USER_ID, mUserId);
+
+    }
 }

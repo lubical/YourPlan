@@ -7,6 +7,7 @@ import org.json.JSONObject;
 import java.util.Date;
 
 import static android.R.attr.x;
+import static android.icu.lang.UCharacter.GraphemeClusterBreak.T;
 import static android.telephony.PhoneNumberUtils.WAIT;
 
 /**
@@ -24,13 +25,14 @@ public class Plan {
     private static final String JSON_PLAN_REPEATFREQUENCY = "planRepeatFrequency";
     private static final String JSON_PLAN_STATUE = "planStatue";
     private static final String JSON_PLAN_IMPORT_URGENT = "planImportantUrgent";
+    private static final String JSON_PLAN_CLASSIFY = "planCalssify";
     private String userID;
     private String planID;
     private String planName;
     private boolean planPrivate;
     private Date planStartTime;
+    private Date planRemindTime;
     private Date planEndTime;
-    private String planRemind;
     private int planRepeatFrequency;      //任务周期数
     private int planStatue;               //任务状态
     private int planImportantUrgent;
@@ -39,6 +41,15 @@ public class Plan {
     public static final int UNIMPORTANT_URGENT = 1;
     public static final int IMPORTANT_NOTURGENT = 2;
     public static final int UNIMPORTANT_NOTURGENT = 3;
+
+    public String getPlanClassify() {
+        return planClassify;
+    }
+
+    public void setPlanClassify(String planClassify) {
+        this.planClassify = planClassify;
+    }
+
     public JSONObject toJSON() throws JSONException {
         JSONObject json = new JSONObject();
         json.put(JSON_USER_ID, userID);
@@ -47,14 +58,27 @@ public class Plan {
         json.put(JSON_PLAN_PRIVATE,planPrivate);
         json.put(JSON_PLAN_START_TIME,planStartTime.getTime());
         json.put(JSON_PLAN_END_TIME, planEndTime.getTime());
-        json.put(JSON_PLAN_REMIND, planRemind);
+        json.put(JSON_PLAN_REMIND, planRemindTime.getTime());
         json.put(JSON_PLAN_REPEATFREQUENCY, planRepeatFrequency);
         json.put(JSON_PLAN_STATUE, planStatue);
         json.put(JSON_PLAN_IMPORT_URGENT, planImportantUrgent);
+        json.put(JSON_PLAN_CLASSIFY, planClassify);
         return json;
     }
-    public Plan(){};
-
+    public Plan(String userID){
+        this.userID = userID;
+        long a = new Date().getTime();
+        planID = Long.toString(a);
+        planStatue = 0;
+        planRepeatFrequency = 1;
+        planStartTime = new Date();
+        planEndTime = new Date();
+        planPrivate = true;
+        planRemindTime = new Date(planStartTime.getTime()+60000);
+        planImportantUrgent = IMPORTANT_URGENT;
+        planClassify = "未分组";
+        planName = new String("New");
+    }
     public int getPlanImportantUrgent() {
         return planImportantUrgent;
     }
@@ -68,9 +92,10 @@ public class Plan {
         planID = json.getString(JSON_PLAN_ID);
         planName = json.getString(JSON_PLAN_NAME);
         planPrivate = json.getBoolean(JSON_PLAN_PRIVATE);
+        planClassify = json.getString(JSON_PLAN_CLASSIFY);
         planStartTime = new Date(json.getLong(JSON_PLAN_START_TIME));
         planEndTime = new Date(json.getLong(JSON_PLAN_END_TIME));
-        planRemind = json.getString(JSON_PLAN_REMIND);
+        planRemindTime = new Date(json.getLong(JSON_PLAN_REMIND));
         planRepeatFrequency = json.getInt(JSON_PLAN_REPEATFREQUENCY);
         planStatue = json.getInt(JSON_PLAN_STATUE);
         planImportantUrgent = json.getInt(JSON_PLAN_IMPORT_URGENT);
@@ -127,12 +152,12 @@ public class Plan {
         return planRepeatFrequency;
     }
 
-    public String getPlanRemind() {
-        return planRemind;
+    public Date getPlanRemindTime() {
+        return planRemindTime;
     }
 
-    public void setPlanRemind(String planRemind) {
-        this.planRemind = planRemind;
+    public void setPlanRemindTime(Date planRemind) {
+        this.planRemindTime = planRemind;
     }
 
     public void setPlanRepeatFrequency(int planRepeatFrequency) {

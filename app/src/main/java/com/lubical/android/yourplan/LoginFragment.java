@@ -1,6 +1,7 @@
 package com.lubical.android.yourplan;
 
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -65,6 +66,9 @@ public class LoginFragment extends Fragment{
                     case MATCH:
                         mUser = UserLab.get(getActivity()).getUser(account);
                         Toast.makeText(getActivity(), "登陆成功", Toast.LENGTH_SHORT).show();
+                        UserLab.get(getActivity()).saveUser();
+                        PlanLab.get(getActivity(), account);
+                        Log.d(TAG,"onClick"+account+key);
                         Intent intent = new Intent(getActivity(), PlanListPagerActivity.class);
                         Bundle args = new Bundle();
                         args.putSerializable(EXTRA_USER_ID, account);
@@ -98,11 +102,14 @@ public class LoginFragment extends Fragment{
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        String account = data.getStringExtra(RegisterFragment.EXTRA_ACCOUNT);
-        String password = data.getStringExtra(RegisterFragment.EXTRA_PASSWORD);
-        acEditText.setText(account);
-        pwEditText.setText(password);
-        Toast.makeText(getActivity(), account+password, Toast.LENGTH_SHORT).show();
+        if (resultCode != Activity.RESULT_OK) return;
+        if (resultCode == REQUEST_ACCOUNT) {
+            String account = data.getStringExtra(RegisterFragment.EXTRA_ACCOUNT);
+            String password = data.getStringExtra(RegisterFragment.EXTRA_PASSWORD);
+            acEditText.setText(account);
+            pwEditText.setText(password);
+            Toast.makeText(getActivity(), account + password, Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override

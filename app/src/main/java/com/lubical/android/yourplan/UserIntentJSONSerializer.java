@@ -14,7 +14,6 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 
 import static android.icu.lang.UCharacter.GraphemeClusterBreak.T;
@@ -24,18 +23,18 @@ import static android.icu.lang.UCharacter.GraphemeClusterBreak.T;
  * Created by lubical on 2016/11/7.
  */
 
-public class PlanIntentJSONSerializer {
+public class UserIntentJSONSerializer {
     private Context mContext;
     private String mFilename;
 
-    public PlanIntentJSONSerializer(Context context, String filename){
+    public UserIntentJSONSerializer(Context context, String filename){
         mContext = context;
         mFilename = filename;
     }
 
-    public void save(ArrayList<Plan> arrayList) throws JSONException, IOException  {
+    public void save(ArrayList<User> arrayList) throws JSONException, IOException  {
         JSONArray array = new JSONArray();
-        for (Plan t:arrayList) {
+        for (User t:arrayList) {
             array.put(t.toJSON());
         }
 
@@ -51,8 +50,8 @@ public class PlanIntentJSONSerializer {
         }
     }
 
-    public ArrayList<Plan> load() throws IOException, JSONException {
-        ArrayList<Plan>  arrayList = new ArrayList<Plan>();
+    public ArrayList<User> load() throws IOException, JSONException {
+        ArrayList<User>  arrayList = new ArrayList<User>();
         BufferedReader reader = null;
         try {
             InputStream in = mContext.openFileInput(mFilename);
@@ -65,7 +64,7 @@ public class PlanIntentJSONSerializer {
             JSONArray array = (JSONArray)new JSONTokener(jsonString.toString()).nextValue();
 
             for (int i = 0; i < array.length(); i++) {
-                Plan t = new Plan(array.getJSONObject(i));
+                User t = new User(array.getJSONObject(i));
                 arrayList.add(t);
             }
         } catch (FileNotFoundException e) {

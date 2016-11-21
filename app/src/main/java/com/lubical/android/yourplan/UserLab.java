@@ -16,15 +16,15 @@ public class UserLab {
     private static final short UNMATCH = 1;
     private static final short MATCH = 2;
     private ArrayList<User> mUsers;
-    private PlanIntentJSONSerializer<User> mPlanIntentJSONSerializer;
+    private UserIntentJSONSerializer  mUserIntentJSONSerializer;
     private static UserLab sUserLab;
     private Context mContext;
 
     private UserLab(Context context) {
         mContext = context;
-        mPlanIntentJSONSerializer = new PlanIntentJSONSerializer<User>(mContext, FILENAME);
+        mUserIntentJSONSerializer = new UserIntentJSONSerializer(mContext, FILENAME);
         try {
-            mUsers = mPlanIntentJSONSerializer.load();
+            mUsers = mUserIntentJSONSerializer.load();
         }catch (Exception e) {
             mUsers = new ArrayList<User>();
             Log.e(TAG, "Error loading users:", e);
@@ -72,7 +72,7 @@ public class UserLab {
 
     public boolean saveUser() {
         try {
-            mPlanIntentJSONSerializer.save(mUsers);
+            mUserIntentJSONSerializer.save(mUsers);
             return true;
         } catch (Exception e) {
             Log.e(TAG, "Error saving users: ", e);

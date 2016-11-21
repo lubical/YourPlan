@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+    <LinearLayout
+        android:id="@+id/fragment_list_planclass_linearlayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <EditText
+            android:id="@+id/fragment_list_planclass_editText"
+            android:layout_width="0dp"
+            android:layout_weight="3"
+            android:layout_height="wrap_content"
+            android:hint="请输入新项目名"/>
+        <Button
+            android:id="@+id/fragment_list_planclass_button"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="确定"/>
+    </LinearLayout>
+    <ListView
+        android:layout_below="@id/fragment_list_planclass_linearlayout"
+        android:id="@android:id/list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    </ListView>
+</RelativeLayout>

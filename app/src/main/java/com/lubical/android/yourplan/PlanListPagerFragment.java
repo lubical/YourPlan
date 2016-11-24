@@ -1,13 +1,16 @@
 package com.lubical.android.yourplan;
 
-import android.app.Activity;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.NavUtils;
 import android.support.v4.view.ViewPager;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
@@ -15,13 +18,11 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
-import static android.os.Build.VERSION_CODES.N;
-
 /**
  * Created by lubical on 2016/11/11.
  */
 
-public class PlanListPagerActivity extends FragmentActivity {
+public class PlanListPagerFragment extends Fragment {
     private ViewPager mViewPager;
     private RadioGroup mRadioGroup;
     private RadioButton mRadioButtonIU;
@@ -31,27 +32,25 @@ public class PlanListPagerActivity extends FragmentActivity {
     private List<PlanListFragment> mPlanListFragments = new ArrayList<PlanListFragment>();
     private String mUserId;
     private static final String USER_ID = "userId";
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_plan_pager_list);
-       // getActionBar().setDisplayHomeAsUpEnabled(true);
-        if (savedInstanceState ==null) {
-            mUserId = getIntent().getStringExtra(LoginFragment.EXTRA_USER_ID);
-        } else {
-            mUserId = savedInstanceState.getString(USER_ID);
-        }
-        mUserId = PlanLab.getmUserId();
-        Toast.makeText(getApplicationContext(), mUserId +"lalalalala", Toast.LENGTH_SHORT).show();
-        PlanLab.get(getApplicationContext(), mUserId);
-        initViews();
-        initEvent();
+        mUserId = PlanLab.get(getContext()).getmUserId();
+        Toast.makeText(getActivity(), mUserId +"lalalalala", Toast.LENGTH_SHORT).show();
     }
-    private void initViews() {
-        mRadioGroup = (RadioGroup)findViewById(R.id.activity_plan_pager_list_rg);
-        mRadioButtonIU = (RadioButton)findViewById(R.id.activity_plan_pagerr_list_rbIU);
-        mRadioButtonINU = (RadioButton)findViewById(R.id.activity_plan_pagerr_list_rbINU);
-        mRadioButtonNIU = (RadioButton)findViewById(R.id.activity_plan_pagerr_list_rbNIU);
-        mRadioButtonNINU = (RadioButton)findViewById(R.id.activity_plan_pagerr_list_rbNINU);
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup viewGroup, Bundle savedInstanceState) {
+        View v = inflater.inflate(R.layout.fragment_plan_pager_list, viewGroup, false);
+        initViews(v);
+        initEvent();
+
+        return v;
+    }
+    private void initViews(View v) {
+        mRadioGroup = (RadioGroup)v.findViewById(R.id.activity_plan_pager_list_rg);
+        mRadioButtonIU = (RadioButton)v.findViewById(R.id.activity_plan_pagerr_list_rbIU);
+        mRadioButtonINU = (RadioButton)v.findViewById(R.id.activity_plan_pagerr_list_rbINU);
+        mRadioButtonNIU = (RadioButton)v.findViewById(R.id.activity_plan_pagerr_list_rbNIU);
+        mRadioButtonNINU = (RadioButton)v.findViewById(R.id.activity_plan_pagerr_list_rbNINU);
         PlanListFragment pe_iu = PlanListFragment.newInstance(Plan.IMPORTANT_URGENT, mUserId);
         PlanListFragment pe_niu = PlanListFragment.newInstance(Plan.UNIMPORTANT_URGENT, mUserId);
         PlanListFragment pe_inu = PlanListFragment.newInstance(Plan.IMPORTANT_NOTURGENT, mUserId);
@@ -60,8 +59,8 @@ public class PlanListPagerActivity extends FragmentActivity {
         mPlanListFragments.add(pe_inu);
         mPlanListFragments.add(pe_niu);
         mPlanListFragments.add(pe_ninu);
-        mViewPager = (ViewPager)findViewById(R.id.viewPager);
-        FragmentManager fm = getSupportFragmentManager();
+        mViewPager = (ViewPager)v.findViewById(R.id.viewPager);
+        FragmentManager fm = getActivity().getSupportFragmentManager();
         TabAdapter adapter = new TabAdapter(fm, mPlanListFragments);
         mViewPager.setAdapter(adapter);
     }
@@ -131,17 +130,6 @@ public class PlanListPagerActivity extends FragmentActivity {
         }
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                if (NavUtils.getParentActivityName(this) != null) {
-                    //NavUtils.navigateUpFromSameTask(this);
-                    return true;
-                }
-        }
-        return super.onOptionsItemSelected(item);
-    }
 
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {

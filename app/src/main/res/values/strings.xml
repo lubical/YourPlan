@@ -9,4 +9,14 @@
     <string name="register_passwordConfirm">密码确认</string>
     <string name="password">密码</string>
     <string name="account">用户名</string>
+    <string name="drawer_open">打开</string>
+    <string name="drawer_close">关闭</string>
+    <string name="delete_plan">Delete</string>
+    <string name="Search">搜索</string>
+    <string name="groupId_name">群名/群Id</string>
+    <string name="disagree">拒绝</string>
+    <string name="agree">同意</string>
+    <string name="apply">申请加入</string>
+    <string name="groupName">群名</string>
+    <string name="member">成员人数</string>
 </resources>

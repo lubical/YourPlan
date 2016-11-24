@@ -12,15 +12,23 @@
         android:stretchColumns="1">
         <TableRow>
             <TextView android:text="@string/account"/>
-            <EditText android:id="@+id/register_account"/>
+            <EditText android:id="@+id/register_account"
+                      android:maxLines="1"
+                      android:maxLength="15"/>
         </TableRow>
         <TableRow>
             <TextView android:text="@string/password"/>
-            <EditText android:id="@+id/register_passwordEditext"/>
+            <EditText android:id="@+id/register_passwordEditext"
+                      android:maxLines="1"
+                      android:inputType="textPassword"
+                      android:maxLength="15"/>
         </TableRow>
         <TableRow>
             <TextView android:text="@string/register_passwordConfirm"/>
-            <EditText android:id="@+id/register_passwordConfirmEditText"/>
+            <EditText android:id="@+id/register_passwordConfirmEditText"
+                      android:maxLines="1"
+                      android:inputType="textPassword"
+                      android:maxLength="15"/>
         </TableRow>
     </TableLayout>
     <Button

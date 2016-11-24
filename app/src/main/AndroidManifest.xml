@@ -18,17 +18,32 @@
             <meta-data android:name="android.support.PARENT_ACTIVITY"
                        android:value=".LoginActivity"></meta-data>
         </activity>
-        <activity android:name=".PlanListPagerActivity">
-        </activity>
         <activity android:name=".PlanActivity">
             <meta-data android:name="android.support.PARENT_ACTIVITY"
-                       android:value=".PlanListPagerActivity"></meta-data>
+                       android:value=".NavigationDrawerActivity"></meta-data>
         </activity>
         <activity android:name=".PlanRemindActivity">
         </activity>
         <activity android:name=".PlanClassifyListActivity">
             <meta-data android:name="android.support.PARENT_ACTIVITY"
                        android:value=".PlanActivity"></meta-data>
+        </activity>
+        <activity android:name=".NavigationDrawerActivity"></activity>
+        <activity android:name=".GroupSearchActivity">
+            <meta-data android:name="android.support.PARENT_ACTIVITY"
+                       android:value=".NavigationDrawerActivity"></meta-data>
+        </activity>
+        <activity android:name=".GroupApplyDealActivity">
+            <meta-data android:name="android.support.PARENT_ACTIVITY"
+                       android:value=".GroupOwnerActivity"></meta-data>
+        </activity>
+        <activity android:name=".GroupMemberActivity">
+            <meta-data android:name="android.support.PARENT_ACTIVITY"
+                       android:value=".NavigationDrawerActivity"></meta-data>
+        </activity>
+        <activity android:name=".GroupOwnerActivity">
+            <meta-data android:name="android.support.PARENT_ACTIVITY"
+                       android:value=".NavigationDrawerActivity"></meta-data>
         </activity>
     </application>
 

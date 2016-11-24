@@ -15,8 +15,9 @@ public class User {
     private static final String JSON_USER_GRADE = "userGrade";
 
     private String userPassword;
-    private enum grade{ADMIN, GROUPOWNER, REGULARUSER};
-    private grade userGrade;
+    private enum grade{ADMIN, GROUPOWNER, REGULARUSER}
+
+    private grade userGrade;  //改成int
     private String userID;
     private static final String TAG = "User";
 
@@ -51,7 +52,8 @@ public class User {
         json.put(JSON_USER_GRADE, userGrade.name());
         return json;
     }
-    public User(){};
+    public User(){}
+
     public User(String userID, String userPassword) {
         this.userID = userID;
         this.userPassword = userPassword;

@@ -69,6 +69,19 @@ public class UserLab {
         mUsers.add(user);
         return true;
     }
+    public boolean changePassword(User user, String newPassword) {
+        for (User user1:mUsers) {
+            if (user1.getUserID().equals(user.getUserID())) {
+                if (user1.getUserPassword().equals(user.getUserPassword())) {
+                    user1.setUserPassword(newPassword);
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        }
+        return false;
+    }
 
     public boolean saveUser() {
         try {

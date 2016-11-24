@@ -20,65 +20,50 @@ public class PlanLab {
     private static PlanLab sPlanLab;
     private Context mContext;
     private PlanIntentJSONSerializer mSerializer;
+    private String mUserId;
 
-    public static String getmUserId() {
+    public String getmUserId() {
         return mUserId;
     }
 
-    public static void setmUserId(String mUserId) {
-        PlanLab.mUserId = mUserId;
+    public void setmUserId(String mUserId) {
+        this.mUserId = mUserId;
     }
 
-    private static String mUserId;
-
-    private PlanLab(Context context, String userId) {
+    public void reload(Context context) {
         mContext = context;
-        mUserId = userId;
         mSerializer = new PlanIntentJSONSerializer (mContext, FILENAME);
         try {
             //mPlans = new ArrayList<Plan>();
             mPlans = mSerializer.load();
-            filterUserPlans();
         } catch (Exception e) {
             Log.e(TAG, "Error loading plans: ", e);
         }
     }
 
+    private PlanLab(Context context) {
+       reload(context);
+    }
+
     public static PlanLab get(Context context) {
         if (sPlanLab == null) {
-            sPlanLab = new PlanLab(context.getApplicationContext(), mUserId);
+            sPlanLab = new PlanLab(context.getApplicationContext());
         }
-        if (mUserId == null) {
-            Log.d(TAG, "PlanLab userId not exist wrong!!!");
-        }
+
         return sPlanLab;
     }
 
-    public static PlanLab get(Context context, String userId) {
-        if (sPlanLab == null) {
-            sPlanLab = new PlanLab(context.getApplicationContext(), userId);
-        }
-        return sPlanLab;
-    }
-
-    public void filterUserPlans() {
-        if (mPlans != null) {
-            for (Plan p : mPlans)
-                if (!p.getUserID().equals(mUserId)) {
-                    mPlans.remove(p);
-                }
-        }
-    }
 
     public ArrayList<Plan> getPlans() {
         return mPlans;
     }
 
-    public ArrayList<Plan> getPlans(int importUrgent) {
+    public ArrayList<Plan> getPlans(String userId,int importUrgent) {
         ArrayList<Plan> plans = new ArrayList<Plan>();
         if (mPlans ==null || mPlans.isEmpty()) return plans;
         for (Plan p : mPlans) {
-            if (p.getPlanImportantUrgent() == importUrgent) {
+            if (p.getUserID().equals(userId) &&
+               (p.getPlanImportantUrgent() == importUrgent)) {
                 plans.add(p);
             }
         }

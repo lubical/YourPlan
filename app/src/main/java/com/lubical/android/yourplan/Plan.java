@@ -23,18 +23,18 @@ public class Plan {
     private static final String JSON_PLAN_END_TIME = "planEndTime";
     private static final String JSON_PLAN_REMIND = "planRemind";
     private static final String JSON_PLAN_REPEATFREQUENCY = "planRepeatFrequency";
-    private static final String JSON_PLAN_STATUE = "planStatue";
+    private static final String JSON_PLAN_STATUE = "planState";
     private static final String JSON_PLAN_IMPORT_URGENT = "planImportantUrgent";
     private static final String JSON_PLAN_CLASSIFY = "planCalssify";
     private String userID;
-    private String planID;
+    private String planID;  //修改为int
     private String planName;
-    private boolean planPrivate;
+    private boolean planPrivate; //去掉，没用到
     private Date planStartTime;
     private Date planRemindTime;
     private Date planEndTime;
     private int planRepeatFrequency;      //任务周期数
-    private int planStatue;               //任务状态
+    private int planState;               //任务状态
     private int planImportantUrgent;
     private String planClassify;             //任务项目，分类
     public static final int IMPORTANT_URGENT = 0;
@@ -60,7 +60,7 @@ public class Plan {
         json.put(JSON_PLAN_END_TIME, planEndTime.getTime());
         json.put(JSON_PLAN_REMIND, planRemindTime.getTime());
         json.put(JSON_PLAN_REPEATFREQUENCY, planRepeatFrequency);
-        json.put(JSON_PLAN_STATUE, planStatue);
+        json.put(JSON_PLAN_STATUE, planState);
         json.put(JSON_PLAN_IMPORT_URGENT, planImportantUrgent);
         json.put(JSON_PLAN_CLASSIFY, planClassify);
         return json;
@@ -69,7 +69,7 @@ public class Plan {
         this.userID = userID;
         long a = new Date().getTime();
         planID = Long.toString(a);
-        planStatue = 0;
+        planState = 0;
         planRepeatFrequency = 1;
         planStartTime = new Date();
         planEndTime = new Date();
@@ -97,7 +97,7 @@ public class Plan {
         planEndTime = new Date(json.getLong(JSON_PLAN_END_TIME));
         planRemindTime = new Date(json.getLong(JSON_PLAN_REMIND));
         planRepeatFrequency = json.getInt(JSON_PLAN_REPEATFREQUENCY);
-        planStatue = json.getInt(JSON_PLAN_STATUE);
+        planState = json.getInt(JSON_PLAN_STATUE);
         planImportantUrgent = json.getInt(JSON_PLAN_IMPORT_URGENT);
     }
     public String getPlanID() {
@@ -165,11 +165,11 @@ public class Plan {
     }
 
     public int getPlanStatue() {
-        return planStatue;
+        return planState;
     }
 
     public void setPlanStatue(int planStatue) {
-        this.planStatue = planStatue;
+        this.planState = planStatue;
     }
 
     public String toString() {

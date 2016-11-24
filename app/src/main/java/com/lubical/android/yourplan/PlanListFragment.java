@@ -1,21 +1,27 @@
 package com.lubical.android.yourplan;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.support.v4.app.NavUtils;
 import android.util.Log;
+import android.view.ActionMode;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by lubical on 2016/11/10.
@@ -34,7 +40,7 @@ public class PlanListFragment extends ListFragment {
         super.onCreate(savedInstanceState);
         plan_IU = (int)getArguments().getSerializable(PLAN_IMPORTANT_URGENT);
         plan_user =(String) getArguments().getSerializable(PLAN_USER);
-        mPlen = PlanLab.get(getActivity()).getPlans(plan_IU);
+        mPlen = PlanLab.get(getActivity()).getPlans(plan_user,plan_IU);
         getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
         setHasOptionsMenu(true);
         PlanAdapter adapter = new PlanAdapter(mPlen);
@@ -43,10 +49,77 @@ public class PlanListFragment extends ListFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup viewGroup, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_list_plan, viewGroup, false);
-//操作栏在此添加操作
+        ListView listView = (ListView)v.findViewById(android.R.id.list);
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
+            registerForContextMenu(listView);
+        } else {
+            listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
+            listView.setMultiChoiceModeListener(new AbsListView.MultiChoiceModeListener() {
+                @Override
+                public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked) {
 
+                }
 
+                @Override
+                public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+                    MenuInflater inflater1 = mode.getMenuInflater();
+                    inflater1.inflate(R.menu.plan_list_item_context, menu);
+                    return true;
+                }
+
+                @Override
+                public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+                    return false;
+                }
+
+                @Override
+                public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+                    switch (item.getItemId()){
+                        case R.id.menu_item_delete_plan:
+                            PlanAdapter adapter = (PlanAdapter)getListAdapter();
+                            PlanLab planLab = PlanLab.get(getActivity());
+                            for (int i=adapter.getCount()-1; i>=0; i--) {
+                                if (getListView().isItemChecked(i)) {
+                                    planLab.deletePlan(adapter.getItem(i));
+                                }
+                            }
+                            mode.finish();
+                            adapter.notifyDataSetChanged();
+                            return true;
+                        default:
+                            return false;
+                    }
+                }
+
+                @Override
+                public void onDestroyActionMode(ActionMode mode) {
+
+                }
+            });
+        }
         return v;
+    }
+    /*
+     * 创建上下文菜单
+    */
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        getActivity().getMenuInflater().inflate(R.menu.plan_list_item_context, menu);
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)item.getMenuInfo();
+        int position = info.position;
+        PlanAdapter adapter = (PlanAdapter)getListAdapter();
+        Plan plan = adapter.getItem(position);
+        switch (item.getItemId()) {
+            case R.id.menu_item_delete_plan:
+                PlanLab.get(getActivity()).deletePlan(plan);
+                adapter.notifyDataSetChanged();
+                return true;
+        }
+        return super.onContextItemSelected(item);
     }
     public static PlanListFragment newInstance(int plan_important_urgent, String planUser) {
         Bundle args = new Bundle();

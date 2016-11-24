@@ -16,7 +16,12 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+
+import org.json.JSONObject;
+
 import java.util.ArrayList;
+import java.util.List;
+
 
 /**
  * Created by lubical on 2016/11/7.
@@ -35,6 +40,7 @@ public class LoginFragment extends Fragment{
 
     private EditText acEditText;
     private EditText pwEditText;
+    JSONObject json;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -67,12 +73,11 @@ public class LoginFragment extends Fragment{
                         mUser = UserLab.get(getActivity()).getUser(account);
                         Toast.makeText(getActivity(), "登陆成功", Toast.LENGTH_SHORT).show();
                         UserLab.get(getActivity()).saveUser();
-                        PlanLab.get(getActivity(), account);
+                        PlanLab.get(getActivity()).reload(getActivity());
+                        PlanLab.get(getActivity()).setmUserId(account);
+                        AccountLab.get(getActivity()).setmUserId(account);
                         Log.d(TAG,"onClick"+account+key);
-                        Intent intent = new Intent(getActivity(), PlanListPagerActivity.class);
-                        Bundle args = new Bundle();
-                        args.putSerializable(EXTRA_USER_ID, account);
-                        intent.putExtras(args);
+                        Intent intent = new Intent(getActivity(), NavigationDrawerActivity.class);
                         startActivity(intent);
                         break;
                     default:
@@ -117,4 +122,6 @@ public class LoginFragment extends Fragment{
         super.onPause();
         UserLab.get(getActivity()).saveUser();
     }
+
+
 }

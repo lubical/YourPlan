@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+    <Button
+        android:id="@+id/list_item_apply_group_disagreeButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:text="@string/disagree"
+        android:background="@android:drawable/btn_star_big_off"/>
+    <Button
+        android:id="@+id/list_item_apply_group_agreeButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toLeftOf="@id/list_item_apply_group_disagreeButton"
+        android:text="@string/agree"
+        android:background="@android:drawable/btn_star_big_on"/>
+    <TextView
+        android:id="@+id/list_item_apply_group_applyerId"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_toLeftOf="@id/list_item_apply_group_agreeButton"
+        android:paddingTop="14dp"
+        android:text="Applyer Id"/>
+
+
+</RelativeLayout>

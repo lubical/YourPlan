@@ -1,15 +1,10 @@
 package com.lubical.android.yourplan;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.support.v4.app.FragmentActivity;
 
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
@@ -20,10 +15,9 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import static android.R.attr.fragment;
+import com.lubical.android.yourplan.user.UserDetalFragment;
+import com.lubical.android.yourplan.group.GroupFragment;
+import com.lubical.android.yourplan.plan.PlanListPagerFragment;
 
 /**
  * Created by lubical on 2016/11/21.
@@ -35,9 +29,8 @@ public class NavigationDrawerActivity extends FragmentActivity {
     private ActionBarDrawerToggle mDrawerToggle;
     private static final String TAG = "NavigationDrawerAct";
     private String[] listViewString = {"计划管理","个人信息","群组管理","退出登陆"};
-    private List<Fragment> mFragmentList;
+    private Fragment planListPagerFragment,userDetalFragment,groupFragment;
     private final FragmentManager mManager = getSupportFragmentManager();
-    private FragmentTransaction mFragmentTransaction;
     @Override
     protected  void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,32 +55,13 @@ public class NavigationDrawerActivity extends FragmentActivity {
                 invalidateOptionsMenu();
             }
         };
-        initFragment();
+        if (savedInstanceState == null) {
+            selectItem(0);
+        }
         mDrawerLayout.setDrawerListener(mDrawerToggle);
 
     }
-    private void initFragment() {
-        mFragmentList = new ArrayList<Fragment>();
-        FragmentTransaction ft = mManager.beginTransaction();
-        PlanListPagerFragment fragment = new PlanListPagerFragment();
-        mFragmentList.add(fragment);
-        ft.add(R.id.content_frame, fragment);
-        ft.commit();
 
-        UserDetalFragment fragment1 = new UserDetalFragment();
-        FragmentTransaction ft1 = mManager.beginTransaction();
-        mFragmentList.add(fragment1);
-        ft.add(R.id.content_frame,fragment1);
-        ft1.commit();
-        ft1.hide(fragment1);
-
-        GroupFragment fragment2 = new GroupFragment();
-        FragmentTransaction ft2 = mManager.beginTransaction();
-        mFragmentList.add(fragment2);
-        ft2.add(R.id.content_frame,fragment2);
-        ft2.commit();
-        ft2.hide(fragment2);
-    }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (mDrawerToggle.onOptionsItemSelected(item)) {
@@ -100,30 +74,57 @@ public class NavigationDrawerActivity extends FragmentActivity {
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             selectItem(position);
         }
-
     }
 
     private void selectItem(int position) {
         mDrawerList.setItemChecked(position, true);
         mDrawerLayout.closeDrawer(mDrawerList);
-        mFragmentTransaction = getSupportFragmentManager().beginTransaction();
         Log.d(TAG, "show"+position);
-        if (position == 3) {
-            Log.d(TAG, "tuichu");
-            PlanLab.get(getApplication()).savePlan();
-            AccountLab.get(getApplication()).saveAccount();
-            GroupLab.get(getApplication()).saveGroup();
-            finish();
+        FragmentTransaction ft = mManager.beginTransaction();
+        hideFragment(ft);
+        switch (position) {
+            case 0:
+                if (planListPagerFragment == null) {
+                    planListPagerFragment = new PlanListPagerFragment();
+                    ft.add(R.id.content_frame, planListPagerFragment);
+                    ft.show(planListPagerFragment);
+                } else {
+                    ft.show(planListPagerFragment);
+                }
+                break;
+            case 1:
+                if (userDetalFragment == null) {
+                    userDetalFragment = new UserDetalFragment();
+                    ft.add(R.id.content_frame,userDetalFragment);
+                    ft.show(userDetalFragment);
+                } else {
+                    ft.show(userDetalFragment);
+                }
+                break;
+            case 2:
+                if (groupFragment == null) {
+                    groupFragment = new GroupFragment();
+                    ft.add(R.id.content_frame,groupFragment);
+                    ft.show(groupFragment);
+                } else {
+                    ft.show(groupFragment);
+                }
+                break;
+            case 3:
+                Log.d(TAG, "退出");
+                finish();
+        }
 
-        }
-        for (int i=0;i<mFragmentList.size();i++) {
-            if (i != position) {
-                mFragmentTransaction.hide(mFragmentList.get(i));
-            }else {
-               mFragmentTransaction.show(mFragmentList.get(i));
-            }
-        }
-        mFragmentTransaction.commit();
+        ft.commit();
+    }
+    public void hideFragment(FragmentTransaction ft) {
+        if (planListPagerFragment != null)
+            ft.hide(planListPagerFragment);
+        if (userDetalFragment != null)
+            ft.hide(userDetalFragment);
+        if (groupFragment != null)
+            ft.hide(groupFragment);
+        //ft.commit();
     }
 
 

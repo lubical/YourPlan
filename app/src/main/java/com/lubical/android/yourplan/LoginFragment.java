@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,10 +16,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
-import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.lubical.android.yourplan.user.RegisterActivity;
+import com.lubical.android.yourplan.user.RegisterFragment;
+import com.lubical.android.yourplan.user.User;
 
 
 /**
@@ -28,7 +26,9 @@ import java.util.List;
  */
 
 public class LoginFragment extends Fragment{
+    public static String loginAccount;
     private String account;
+    private static final String LOGIN_ACCOUNT = "login.account";
     private String key;
     private User mUser;
     private static final String TAG ="LoginFragment";
@@ -40,11 +40,19 @@ public class LoginFragment extends Fragment{
 
     private EditText acEditText;
     private EditText pwEditText;
-    JSONObject json;
+    private DBManager mDBManager;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        mDBManager = new DBManager(getActivity());
+        mDBManager.init();
+
+
+        if (savedInstanceState != null) {
+            loginAccount = savedInstanceState.getString(LOGIN_ACCOUNT);
+        }
     }
 
     @Override
@@ -61,7 +69,7 @@ public class LoginFragment extends Fragment{
                 account = acEditText.getText().toString();
                 key = pwEditText.getText().toString();
                 User user = new User(account, key);
-                short state = UserLab.get(getActivity()).findUser(user);
+                short state = mDBManager.login(user);
                 switch (state) {
                     case NOEXIST:
                         Toast.makeText(getActivity(), "账户不存在",Toast.LENGTH_SHORT).show();
@@ -70,12 +78,8 @@ public class LoginFragment extends Fragment{
                         Toast.makeText(getActivity(), "密码错误", Toast.LENGTH_SHORT).show();
                         break;
                     case MATCH:
-                        mUser = UserLab.get(getActivity()).getUser(account);
                         Toast.makeText(getActivity(), "登陆成功", Toast.LENGTH_SHORT).show();
-                        UserLab.get(getActivity()).saveUser();
-                        PlanLab.get(getActivity()).reload(getActivity());
-                        PlanLab.get(getActivity()).setmUserId(account);
-                        AccountLab.get(getActivity()).setmUserId(account);
+                        loginAccount = account;
                         Log.d(TAG,"onClick"+account+key);
                         Intent intent = new Intent(getActivity(), NavigationDrawerActivity.class);
                         startActivity(intent);
@@ -83,14 +87,12 @@ public class LoginFragment extends Fragment{
                     default:
                         Log.e(TAG, "Login failure");
                 }
-                Log.d(TAG,"onClick"+account+key);
             }
         });
 
         TextView register = (TextView)v.findViewById(R.id.login_registTextView);
         register.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-               // Toast.makeText(getActivity(), "注册", Toast.LENGTH_SHORT).show();
                 Intent i = new Intent(getActivity(),RegisterActivity.class);
                 startActivityForResult(i, REQUEST_ACCOUNT);
 
@@ -120,8 +122,17 @@ public class LoginFragment extends Fragment{
     @Override
     public void onPause() {
         super.onPause();
-        UserLab.get(getActivity()).saveUser();
+    }
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mDBManager.closeDB();
     }
 
-
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        Log.i(TAG, "onSaveInstanceState");
+        outState.putString(LOGIN_ACCOUNT,loginAccount);
+    }
 }

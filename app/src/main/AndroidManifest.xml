@@ -14,36 +14,40 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".RegisterActivity">
+        <activity android:name=".user.RegisterActivity">
             <meta-data android:name="android.support.PARENT_ACTIVITY"
                        android:value=".LoginActivity"></meta-data>
         </activity>
-        <activity android:name=".PlanActivity">
+        <activity android:name=".plan.PlanActivity">
             <meta-data android:name="android.support.PARENT_ACTIVITY"
                        android:value=".NavigationDrawerActivity"></meta-data>
         </activity>
-        <activity android:name=".PlanRemindActivity">
+        <activity android:name=".plan.PlanRemindActivity">
         </activity>
-        <activity android:name=".PlanClassifyListActivity">
+        <activity android:name=".plan.PlanClassifyListActivity">
             <meta-data android:name="android.support.PARENT_ACTIVITY"
-                       android:value=".PlanActivity"></meta-data>
+                       android:value=".plan.PlanActivity"></meta-data>
         </activity>
         <activity android:name=".NavigationDrawerActivity"></activity>
-        <activity android:name=".GroupSearchActivity">
+        <activity android:name=".group.GroupSearchActivity">
             <meta-data android:name="android.support.PARENT_ACTIVITY"
                        android:value=".NavigationDrawerActivity"></meta-data>
         </activity>
-        <activity android:name=".GroupApplyDealActivity">
+        <activity android:name=".group.GroupApplyDealActivity">
             <meta-data android:name="android.support.PARENT_ACTIVITY"
-                       android:value=".GroupOwnerActivity"></meta-data>
+                       android:value=".group.GroupOwnerActivity"></meta-data>
         </activity>
-        <activity android:name=".GroupMemberActivity">
+        <activity android:name=".group.GroupMemberActivity">
             <meta-data android:name="android.support.PARENT_ACTIVITY"
                        android:value=".NavigationDrawerActivity"></meta-data>
         </activity>
-        <activity android:name=".GroupOwnerActivity">
+        <activity android:name=".group.GroupOwnerActivity">
             <meta-data android:name="android.support.PARENT_ACTIVITY"
                        android:value=".NavigationDrawerActivity"></meta-data>
+        </activity>
+        <activity android:name=".group.GroupPlanActivity">
+            <meta-data android:name="android.support.PARENT_ACTIVITY"
+                       android:value=".group.GroupOwnerActivity"></meta-data>
         </activity>
     </application>
 

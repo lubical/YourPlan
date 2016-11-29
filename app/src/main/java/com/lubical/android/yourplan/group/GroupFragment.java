@@ -31,7 +31,6 @@ public class GroupFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setHasOptionsMenu(false);
         mDBManager = new DBManager(getActivity());
         userId = LoginFragment.loginAccount;
         mAccount = mDBManager.getAccount(userId);
@@ -54,6 +53,7 @@ public class GroupFragment extends Fragment {
                     Log.d(TAG, "create a group" + userId);
                     Group group = new Group(userId);
                     Plan plan = new Plan(userId);
+                    plan.setUserID(group.getGroupId().toString());
                     group.setGroupPlanId(plan.getPlanID());
                     Account account = mDBManager.getAccount(userId);
                     account.setGroupId(group.getGroupId());

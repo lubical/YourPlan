@@ -1,5 +1,6 @@
 package com.lubical.android.yourplan.share;
 
+import java.util.Date;
 import java.util.UUID;
 
 /**
@@ -13,12 +14,43 @@ public class Share {
     public static final String SHARE_MESSAGE = "message";
     public static final String SHARE_GROUPID = "groupId";
     public static final String SHARE_TIME = "time";
+    public static final String SHARE_THUMBUPCOUNT = "thumbUpCount";
+    public static final String SHARE_COMMENTCOUNT = "commentCount";
     private UUID shareId;
     private String userId;
     private UUID planId;
     private String message;
     private UUID groupId;
     private long time;
+    private int thumbUpCount;
+    private int commentCount;
+    public Share(){}
+    public Share(UUID planId,UUID groupId,String userId, String message) {
+        shareId = UUID.randomUUID();
+        this.groupId = groupId;
+        this.planId = planId;
+        this.userId = userId;
+        this.message = message;
+        time = new Date().getTime();
+        thumbUpCount = 0;
+        commentCount = 0;
+    }
+
+    public int getThumbUpCount() {
+        return thumbUpCount;
+    }
+
+    public void setThumbUpCount(int thumbUpCount) {
+        this.thumbUpCount = thumbUpCount;
+    }
+
+    public int getCommentCount() {
+        return commentCount;
+    }
+
+    public void setCommentCount(int commentCount) {
+        this.commentCount = commentCount;
+    }
 
     public UUID getGroupId() {
         return groupId;

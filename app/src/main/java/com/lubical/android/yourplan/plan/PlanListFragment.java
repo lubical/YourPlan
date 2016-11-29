@@ -43,13 +43,15 @@ public class PlanListFragment extends ListFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+        if (NavUtils.getParentActivityName(getActivity()) != null ) {
+            getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
+        }
         mDBManager = new DBManager(getActivity());
         plan_IU = (int)getArguments().getSerializable(PLAN_IMPORTANT_URGENT);
         plan_user =(String) getArguments().getSerializable(PLAN_USER);
-        mArrayListData = mDBManager.getUserPlanMapList(plan_user, plan_IU);
 
-        getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
-        setHasOptionsMenu(true);
+        mArrayListData = mDBManager.getUserPlanMapList(plan_user, plan_IU);
         planAdapter = new SimpleAdapter(
                 getActivity(),
                 mArrayListData,
@@ -158,6 +160,7 @@ public class PlanListFragment extends ListFragment {
     @Override
     public void onResume() {
         super.onResume();
+        Log.d(TAG,"onResume"+plan_user+plan_IU);
         planAdapter.notifyDataSetChanged();
     }
 
@@ -177,6 +180,7 @@ public class PlanListFragment extends ListFragment {
                 Intent i = new Intent(getActivity(), PlanActivity.class);
                 i.putExtra(PlanFragment.EXTRA_PLAN_ID, plan.getPlanID().toString());
                 startActivityForResult(i, REQUEST_PLAN);
+                planAdapter.notifyDataSetChanged();
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -191,6 +195,7 @@ public class PlanListFragment extends ListFragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        Log.d(TAG, "onDestroy");
         mDBManager.closeDB();
     }
 }

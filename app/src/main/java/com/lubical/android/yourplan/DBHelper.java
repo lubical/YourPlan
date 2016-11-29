@@ -40,10 +40,14 @@ public class DBHelper extends SQLiteOpenHelper {
                 "userPassword VARCHAR, userGrade INTEGER)");
 
         db.execSQL("CREATE TABLE IF NOT EXISTS Review (reviewId TEXT PRIMARY KEY, shareId TEXT," +
-                   "userId VARCHAR, isThumbUp INTEGER, comment TEXT, time INTEGER)");
+                   "userId VARCHAR, comment TEXT, time INTEGER)");
+
+        db.execSQL("CREATE TABLE IF NOT EXISTS ReviewThumb (shareId TEXT , userId VARCHAR," +
+                  "PRIMARY KEY(userId,shareId))");
 
         db.execSQL("CREATE TABLE IF NOT EXISTS Share (shareId TEXT PRIMARY KEY, userId VARCHAR," +
-                   "planId TEXT, message TEXT, groupId TEXT, time INTEGER)");
+                   "planId TEXT, message TEXT, groupId TEXT, time INTEGER, thumbUpCount INTEGER," +
+                   "commentCount INTEGER)");
     }
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
@@ -54,6 +58,7 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS User");
         db.execSQL("DROP TABLE IF EXISTS Share");
         db.execSQL("DROP TABLE IF EXISTS Review");
+        db.execSQL("DROP TABLE IF EXISTS ReviewThumb");
         onCreate(db);
     }
  }

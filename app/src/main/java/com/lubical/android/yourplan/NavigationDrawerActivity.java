@@ -15,6 +15,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.lubical.android.yourplan.share.ShareListFragment;
 import com.lubical.android.yourplan.user.UserDetalFragment;
 import com.lubical.android.yourplan.group.GroupFragment;
 import com.lubical.android.yourplan.plan.PlanListPagerFragment;
@@ -28,8 +29,8 @@ public class NavigationDrawerActivity extends FragmentActivity {
     private ListView mDrawerList;
     private ActionBarDrawerToggle mDrawerToggle;
     private static final String TAG = "NavigationDrawerAct";
-    private String[] listViewString = {"计划管理","个人信息","群组管理","退出登陆"};
-    private Fragment planListPagerFragment,userDetalFragment,groupFragment;
+    private String[] listViewString = {"计划管理","个人信息","群组管理","分享评论","退出登陆"};
+    private Fragment planListPagerFragment,userDetalFragment,groupFragment,shareListFrgment;
     private final FragmentManager mManager = getSupportFragmentManager();
     @Override
     protected  void onCreate(Bundle savedInstanceState) {
@@ -111,6 +112,15 @@ public class NavigationDrawerActivity extends FragmentActivity {
                 }
                 break;
             case 3:
+                if (shareListFrgment == null) {
+                   shareListFrgment = new ShareListFragment();
+                    ft.add(R.id.content_frame, shareListFrgment);
+                    ft.show(shareListFrgment);
+                } else {
+                    ft.show(shareListFrgment);
+                }
+                break;
+            case 4:
                 Log.d(TAG, "退出");
                 finish();
         }
@@ -124,6 +134,8 @@ public class NavigationDrawerActivity extends FragmentActivity {
             ft.hide(userDetalFragment);
         if (groupFragment != null)
             ft.hide(groupFragment);
+        if (shareListFrgment != null)
+            ft.hide(shareListFrgment);
         //ft.commit();
     }
 

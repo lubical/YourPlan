@@ -1,6 +1,8 @@
 package com.lubical.android.yourplan.plan;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -11,6 +13,8 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,14 +23,18 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Toast;
 
 import com.lubical.android.yourplan.DBManager;
 import com.lubical.android.yourplan.DateTimePickerFragment;
 import com.lubical.android.yourplan.R;
+import com.lubical.android.yourplan.account.Account;
+import com.lubical.android.yourplan.share.Share;
 
 import java.util.Date;
 import java.util.UUID;
 
+import static android.icu.lang.UCharacter.GraphemeClusterBreak.T;
 import static java.lang.Integer.parseInt;
 
 /**
@@ -58,9 +66,11 @@ public class PlanFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
-        mDBManager = new DBManager(getActivity());
         setHasOptionsMenu(true);
+        if (NavUtils.getParentActivityName(getActivity()) != null ) {
+            getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
+        }
+        mDBManager = new DBManager(getActivity());
         planId = UUID.fromString(getActivity().getIntent().getStringExtra(EXTRA_PLAN_ID));
         Log.d(TAG, "planId"+planId);
         mPlan = mDBManager.getPlan(planId);
@@ -266,7 +276,6 @@ public class PlanFragment extends Fragment {
         }
         if (requestCode == REQUEST_PLANCLASS) {
             String planclass = data.getStringExtra(PlanClassifyListFragment.EXTRA_PLANCLASSIFY);
-            Log.d(TAG, planclass+"aaaaaaaaa");
             classifyBt.setText(planclass);
             mPlan.setPlanClassify(planclass);
             classifyBt.setText(mPlan.getPlanClassify());
@@ -274,15 +283,52 @@ public class PlanFragment extends Fragment {
 
     }
     @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.fragment_plan_share, menu);
+    }
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
                 if (NavUtils.getParentActivityName(getActivity()) != null) {
+                    Log.d(TAG, mPlan.getPlanName()+mPlan.getUserID()+mPlan.getPlanImportantUrgent());
                     mDBManager.updatePlan(mPlan);
-                    Log.d(TAG, "NavUtils_______________________________");
                     NavUtils.navigateUpFromSameTask(getActivity());
                     return true;
                 }
+                break;
+            case R.id.menu_item_plan_share:
+                final EditText editText = new EditText(getActivity());
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setTitle("分享");
+                builder.setMessage("请输入分享感言(可选)");
+                builder.setView(editText);
+                builder.setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String message = editText.getText().toString();
+                        Account account = mDBManager.getAccount(mPlan.getUserID());
+                        Share share = new Share(mPlan.getPlanID(),account.getGroupId(), mPlan.getUserID(), message);
+                        Log.d(TAG, " userId="+account.getUserId());
+                        Log.d(TAG, " groupId="+account.getGroupId());
+                        boolean shared = mDBManager.isExistShare(mPlan.getPlanID());
+                        if (!shared) {
+                           mDBManager.addShare(share);
+                            Toast.makeText(getActivity(),"分享成功", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(getActivity(),"已分享", Toast.LENGTH_SHORT).show();
+                        }
+                        dialog.dismiss();
+                    }
+                });
+                builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+                builder.create().show();
         }
         return super.onOptionsItemSelected(item);
     }

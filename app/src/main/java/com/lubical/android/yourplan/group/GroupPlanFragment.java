@@ -8,10 +8,12 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.NavUtils;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -53,10 +55,15 @@ public class GroupPlanFragment  extends Fragment{
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+        if (NavUtils.getParentActivityName(getActivity()) != null ) {
+            getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
+        }
         planId = UUID.fromString(getArguments().getString(EXTRA_GROUP_PLAN_ID));
         mDBManager = new DBManager(getActivity());
         mPlan = mDBManager.getPlan(planId);
         try {
+            Log.d(TAG, mPlan.getUserID());
             groupId = UUID.fromString(mPlan.getUserID());
             mGroup = mDBManager.getGroup(groupId);
 
@@ -178,7 +185,21 @@ public class GroupPlanFragment  extends Fragment{
 
         return v;
     }
-
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                if (NavUtils.getParentActivityName(getActivity()) != null) {
+                    mPlan.setPlanName(planName.getText().toString());
+                    mDBManager.updatePlan(mPlan);
+                    mDBManager.updateGroup(mGroup);
+                    NavUtils.navigateUpFromSameTask(getActivity());
+                    return true;
+                }
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
     public static GroupPlanFragment newInstance(String planId) {
         Bundle args = new Bundle();
         args.putSerializable(EXTRA_GROUP_PLAN_ID,planId);
@@ -210,6 +231,9 @@ public class GroupPlanFragment  extends Fragment{
     @Override
     public void onDestroy() {
         super.onDestroy();
+        mPlan.setPlanName(planName.getText().toString());
+        mDBManager.updatePlan(mPlan);
+        mDBManager.updateGroup(mGroup);
         mDBManager.closeDB();
     }
 }

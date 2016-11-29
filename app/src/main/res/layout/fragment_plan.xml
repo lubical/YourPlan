@@ -81,7 +81,8 @@
             android:layout_height="0dp"
             android:layout_gravity="left|center"
             android:layout_weight="1"
-            android:gravity="left"/>
+            android:gravity="left|center"
+            android:text="不提醒"/>
         <Button
             android:id="@+id/frgment_plan_classifyBt"
             android:background="@null"

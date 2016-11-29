@@ -28,7 +28,8 @@
             <meta-data android:name="android.support.PARENT_ACTIVITY"
                        android:value=".plan.PlanActivity"></meta-data>
         </activity>
-        <activity android:name=".NavigationDrawerActivity"></activity>
+        <activity android:name=".NavigationDrawerActivity"
+                  ></activity>
         <activity android:name=".group.GroupSearchActivity">
             <meta-data android:name="android.support.PARENT_ACTIVITY"
                        android:value=".NavigationDrawerActivity"></meta-data>
@@ -37,11 +38,13 @@
             <meta-data android:name="android.support.PARENT_ACTIVITY"
                        android:value=".group.GroupOwnerActivity"></meta-data>
         </activity>
-        <activity android:name=".group.GroupMemberActivity">
+        <activity android:name=".group.GroupMemberActivity"
+                  android:launchMode="singleTop">
             <meta-data android:name="android.support.PARENT_ACTIVITY"
                        android:value=".NavigationDrawerActivity"></meta-data>
         </activity>
-        <activity android:name=".group.GroupOwnerActivity">
+        <activity android:name=".group.GroupOwnerActivity"
+                  android:launchMode="singleTask">
             <meta-data android:name="android.support.PARENT_ACTIVITY"
                        android:value=".NavigationDrawerActivity"></meta-data>
         </activity>

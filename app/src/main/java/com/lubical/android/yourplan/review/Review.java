@@ -1,5 +1,6 @@
 package com.lubical.android.yourplan.review;
 
+import java.util.Date;
 import java.util.UUID;
 
 /**
@@ -10,15 +11,22 @@ public class Review {
     public static final String REVIEW_REVIEWID = "reviewId";
     public static final String REVIEW_SHAREID = "shareId";
     public static final String REVIEW_USERID = "userId";
-    public static final String REVIEW_ISTHUMPUP = "isThumbUp";
     public static final String REVIEW_COMMENT = "comment";
     public static final String REVIEW_TIME = "time";
     private UUID reviewId;
     private UUID shareId;
     private String userId;
-    private int isThumbUp;
     private String comment;
     private long time;
+    public Review(){}
+
+    public Review(UUID shareId, String userId, String comment) {
+        this.reviewId = UUID.randomUUID();
+        this.shareId = shareId;
+        this.userId = userId;
+        this.comment = comment;
+        this.time = new Date().getTime();
+    }
 
     public UUID getReviewId() {
         return reviewId;
@@ -42,14 +50,6 @@ public class Review {
 
     public void setUserId(String userId) {
         this.userId = userId;
-    }
-
-    public int getIsThumbUp() {
-        return isThumbUp;
-    }
-
-    public void setIsThumbUp(int isThumbUp) {
-        this.isThumbUp = isThumbUp;
     }
 
     public String getComment() {

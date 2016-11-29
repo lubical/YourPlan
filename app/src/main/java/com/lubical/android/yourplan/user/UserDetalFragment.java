@@ -47,7 +47,7 @@ public class UserDetalFragment extends Fragment{
             mAccount = new Account(userId);
             mDBManager.addAccount(mAccount);
         }
-        setHasOptionsMenu(false);
+        Log.d(TAG, " in "+mAccount.getWeight()+"kg");
     }
     @Nullable
     @Override
@@ -95,6 +95,7 @@ public class UserDetalFragment extends Fragment{
                 }
                 mAccount.setSex(sex);
                 mDBManager.updateAccount(mAccount);
+                Log.d(TAG, mAccount.getWeight()+"kg");
                 Toast.makeText(getActivity(),"修改成功",Toast.LENGTH_SHORT).show();
             }
         });

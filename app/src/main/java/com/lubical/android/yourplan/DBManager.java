@@ -8,6 +8,7 @@ import android.util.Log;
 
 import com.lubical.android.yourplan.account.Account;
 import com.lubical.android.yourplan.review.Review;
+import com.lubical.android.yourplan.review.ReviewThumb;
 import com.lubical.android.yourplan.share.Share;
 import com.lubical.android.yourplan.user.User;
 import com.lubical.android.yourplan.group.Group;
@@ -19,6 +20,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
+
+import static android.icu.lang.UCharacter.GraphemeClusterBreak.L;
 
 
 /**
@@ -100,7 +103,7 @@ public class DBManager {
         cv.put(Account.ACCOUNT_AGE, account.getAge());
         cv.put(Account.ACCOUNT_HEIGTH, account.getHeight());
         cv.put(Account.ACCOUNT_SEX, account.getSex());
-        cv.put(Account.ACCOUNT_WEIGHT, account.getHeight());
+        cv.put(Account.ACCOUNT_WEIGHT, account.getWeight());
         cv.put(Account.ACCOUNT_GROUP_ID, account.getGroupId().toString());
         cv.put(Account.ACCOUNT_GROUP_TASK_STATE, account.getGroupTaskState());
         cv.put(Account.ACCOUNT_GROUP_TASK_REWARD, account.getGroupTaskReward());
@@ -622,9 +625,10 @@ public class DBManager {
 
     /**************Share start*********************/
     public void addShare(Share share) {
-        db.execSQL("INSERT INTO Share VALUES(?,?,?,?,?,?)", new Object[]{
+        db.execSQL("INSERT INTO Share VALUES(?,?,?,?,?,?,?,?)", new Object[]{
                 share.getShareId().toString(), share.getUserId(), share.getPlanId().toString(),
-                share.getMessage(), share.getGroupId().toString(), share.getTime()
+                share.getMessage(), share.getGroupId().toString(), share.getTime(),
+                share.getThumbUpCount(), share.getCommentCount()
                 });
     }
 
@@ -638,12 +642,30 @@ public class DBManager {
         cv.put(Share.SHARE_USERID, share.getUserId());
         cv.put(Share.SHARE_TIME, share.getTime());
         cv.put(Share.SHARE_GROUPID, share.getGroupId().toString());
+        cv.put(Share.SHARE_COMMENTCOUNT, share.getCommentCount());
+        cv.put(Share.SHARE_THUMBUPCOUNT, share.getThumbUpCount());
         db.update("Share",cv,"shareId=?",new String[]{share.getShareId().toString()});
     }
     public boolean isExistShare(UUID planId) {
         Cursor c = db.rawQuery("SELECT * FROM Share WHERE planId=?",new String[]{planId.toString()});
         if (c.getCount() == 0) return false;
         else return true;
+    }
+    public Share getShare(UUID shareId) {
+        Share share = new Share();
+        Cursor c = db.rawQuery("SELECT * FROM Share where shareId = ?", new String[]{shareId.toString()});
+        if (c.getCount() == 0) return null;
+        c.moveToNext();
+        share.setShareId(UUID.fromString(c.getString(c.getColumnIndex(Share.SHARE_SHAREID))));
+        share.setPlanId(UUID.fromString(c.getString(c.getColumnIndex(Share.SHARE_PLANID))));
+        share.setCommentCount(c.getInt(c.getColumnIndex(Share.SHARE_COMMENTCOUNT)));
+        share.setThumbUpCount(c.getInt(c.getColumnIndex(Share.SHARE_THUMBUPCOUNT)));
+        share.setGroupId(UUID.fromString(c.getString(c.getColumnIndex(Share.SHARE_GROUPID))));
+        share.setTime(c.getInt(c.getColumnIndex(Share.SHARE_TIME)));
+        share.setUserId(c.getString(c.getColumnIndex(Share.SHARE_USERID)));
+        share.setMessage(c.getString(c.getColumnIndex(Share.SHARE_MESSAGE)));
+        c.close();
+        return share;
     }
     private HashMap<String, Object>getShareHashMap(Cursor c) {
         HashMap<String, Object> map = new HashMap<String, Object>();
@@ -653,11 +675,22 @@ public class DBManager {
         map.put(Share.SHARE_MESSAGE, c.getString(c.getColumnIndex(Share.SHARE_MESSAGE)));
         map.put(Share.SHARE_GROUPID, c.getString(c.getColumnIndex(Share.SHARE_GROUPID)));
         map.put(Share.SHARE_TIME, c.getInt(c.getColumnIndex(Share.SHARE_TIME)));
+        map.put(Share.SHARE_THUMBUPCOUNT, c.getInt(c.getColumnIndex(Share.SHARE_THUMBUPCOUNT)));
+        map.put(Share.SHARE_COMMENTCOUNT, c.getInt(c.getColumnIndex(Share.SHARE_COMMENTCOUNT)));
+        map.put(Plan.PLAN_NAME, c.getString(c.getColumnIndex(Plan.PLAN_NAME)));
+        map.put(Account.ACCOUNT_NAME, c.getString(c.getColumnIndex(Account.ACCOUNT_NAME)));
+        int times = c.getInt(c.getColumnIndex(Plan.PLAN_REPEATFREQUENCY));
+        int statue = c.getInt(c.getColumnIndex(Plan.PLAN_STATUE));
+        map.put("statue",statue+"/"+times);
         return map;
     }
+
     public List<HashMap<String, Object>> getShareMapList(UUID groupId) {
+        Log.d(TAG," shareMapList ");
         List<HashMap<String, Object>> mapList = new ArrayList<HashMap<String, Object>>();
-        Cursor c = db.rawQuery("SELECT * FROM Share WHERE groupId = ? ORDER BY time DESC",
+        Cursor c = db.rawQuery("SELECT * FROM Share,Plan,Account WHERE Share.groupId = ? "  +
+                        " and Share.planId = Plan.planId and Share.userId = Account.userId "  +
+                        " ORDER BY Share.time DESC",
                 new String[]{groupId.toString()});
         while (c.moveToNext()) {
             mapList.add(getShareHashMap(c));
@@ -669,9 +702,9 @@ public class DBManager {
 
     /**************Review start***********************/
     public void addReview(Review review) {
-        db.execSQL("INSERT INTO Review VALUES(?,?,?,?,?,?)", new Object[]{
+        db.execSQL("INSERT INTO Review VALUES(?,?,?,?,?)", new Object[]{
                 review.getReviewId().toString(), review.getShareId().toString(), review.getUserId(),
-                review.getIsThumbUp(), review.getComment(), review.getTime()
+                review.getComment(), review.getTime()
         });
     }
     private HashMap<String, Object>getReviewHashMap(Cursor c) {
@@ -679,15 +712,16 @@ public class DBManager {
         map.put(Review.REVIEW_SHAREID, c.getString(c.getColumnIndex(Review.REVIEW_SHAREID)));
         map.put(Review.REVIEW_REVIEWID, c.getString(c.getColumnIndex(Review.REVIEW_REVIEWID)));
         map.put(Review.REVIEW_COMMENT, c.getString(c.getColumnIndex(Review.REVIEW_COMMENT)));
-        map.put(Review.REVIEW_ISTHUMPUP, c.getInt(c.getColumnIndex(Review.REVIEW_ISTHUMPUP)));
         map.put(Review.REVIEW_TIME, c.getInt(c.getColumnIndex(Review.REVIEW_TIME)));
         map.put(Review.REVIEW_USERID, c.getString(c.getColumnIndex(Review.REVIEW_USERID)));
+        map.put(Account.ACCOUNT_NAME, c.getString(c.getColumnIndex(Account.ACCOUNT_NAME)));
         return map;
     }
-    public List<HashMap<String, Object>> getReviewMapList(UUID planId) {
+    public List<HashMap<String, Object>> getReviewMapList(UUID shareId) {
         List<HashMap<String, Object>> mapList = new ArrayList<HashMap<String, Object>>();
-        Cursor c =  db.rawQuery("SELECT * FROM Review WHERE planId = ? ORDER BY time DESC",
-                              new String[]{planId.toString()});
+        Cursor c =  db.rawQuery("SELECT * FROM Review,Account WHERE Review.shareId = ? " +
+                " and Review.userId = Account.userId ORDER BY time DESC limit 0,5",
+                              new String[]{shareId.toString()});
         while (c.moveToNext()) {
             mapList.add(getReviewHashMap(c));
         }
@@ -695,9 +729,27 @@ public class DBManager {
         return mapList;
     }
     public void deleteReview(Review review) {
-        db.delete("Review","reviewId=",new String[]{review.getReviewId().toString()});
+        db.delete("Review","reviewId=?",new String[]{review.getReviewId().toString()});
     }
     /**************Review end***********************/
+
+    /**************ReviewThumb start*****************/
+    public void addReviewThumb(ReviewThumb reviewThumb) {
+        db.execSQL("INSERT INTO ReviewThumb VALUES(?,?)", new Object[]{
+                reviewThumb.getShareId().toString(), reviewThumb.getUserId()
+        });
+    }
+    public boolean isExistThumb(ReviewThumb reviewThumb) {
+        Cursor c = db.rawQuery("SELECT * FROM ReviewThumb WHERE shareId=? and userId=?",
+                new String[]{reviewThumb.getShareId().toString(), reviewThumb.getUserId()});
+        if (c.getCount() == 0) return false;
+        else return true;
+    }
+    public void deleteReviewThumb(ReviewThumb reviewThumb) {
+        db.delete("ReviewThumb","shareId=? and userId=?",
+                new String[]{reviewThumb.getShareId().toString(), reviewThumb.getUserId()});
+    }
+    /**************ReviewThumb end*******************/
     public void init() {
         if (!tableIsExist("User")) {
             Log.d(TAG, "table User is exist");

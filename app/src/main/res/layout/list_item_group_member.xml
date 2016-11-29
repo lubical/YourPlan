@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:paddingLeft="4dp"
         android:paddingRight="4dp"
-        android:text="用户名"
+
         android:textStyle="bold"/>
     <LinearLayout
         android:layout_weight="1"
@@ -28,7 +28,7 @@
             android:paddingLeft="4dp"
             android:paddingRight="4dp"
             android:paddingTop="4dp"
-            android:text="3"/>
+            />
     </LinearLayout>
     <LinearLayout
         android:layout_weight="1"
@@ -46,7 +46,7 @@
             android:paddingLeft="4dp"
             android:paddingRight="4dp"
             android:paddingTop="4dp"
-            android:text="3"/>
+            />
     </LinearLayout>
 
 </LinearLayout>

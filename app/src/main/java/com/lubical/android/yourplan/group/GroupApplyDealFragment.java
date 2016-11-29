@@ -37,6 +37,10 @@ public class GroupApplyDealFragment extends ListFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+        if (NavUtils.getParentActivityName(getActivity()) != null ) {
+            getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
+        }
         mDBManager = new DBManager(getActivity());
         getGruopId = getArguments().getString(GRUOP_ID);
         Log.d("GADeal", getGruopId);

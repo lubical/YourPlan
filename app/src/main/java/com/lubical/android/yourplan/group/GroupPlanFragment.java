@@ -30,6 +30,8 @@ import com.lubical.android.yourplan.plan.Plan;
 import java.util.Date;
 import java.util.UUID;
 
+import static android.icu.lang.UCharacter.GraphemeClusterBreak.L;
+
 /**
  * Created by lubical on 2016/11/23.
  */
@@ -60,13 +62,15 @@ public class GroupPlanFragment  extends Fragment{
             getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
         }
         planId = UUID.fromString(getArguments().getString(EXTRA_GROUP_PLAN_ID));
+        Log.d(TAG,"onCreate"+planId);
         mDBManager = new DBManager(getActivity());
         mPlan = mDBManager.getPlan(planId);
+        Log.d(TAG, "times"+mPlan.getPlanRepeatFrequency());
+        Log.d(TAG, "name "+mPlan.getPlanName());
         try {
-            Log.d(TAG, mPlan.getUserID());
+            Log.d(TAG, "userId "+mPlan.getUserID());
             groupId = UUID.fromString(mPlan.getUserID());
             mGroup = mDBManager.getGroup(groupId);
-
         } catch (Exception e) {
             Log.e(TAG, "get groupId failure");
             getActivity().finish();
@@ -78,7 +82,7 @@ public class GroupPlanFragment  extends Fragment{
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_group_plan, null);
-
+        Log.d(TAG, "planName "+mPlan.getPlanName());
         planName = (EditText)v.findViewById(R.id.fragment_group_plan_nameET);
         planName.setText(mPlan.getPlanName());
         dateTime = (Button) v.findViewById(R.id.fragment_group_plan_dateTimeBt);
@@ -152,8 +156,15 @@ public class GroupPlanFragment  extends Fragment{
         finishBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mPlan.setPlanName(planName.getText().toString());
                 mDBManager.updateGroup(mGroup);
                 mDBManager.updatePlan(mPlan);
+                Plan mmplan = mDBManager.getPlan(planId);
+                Log.d(TAG, "planId "+planId);
+                Log.d(TAG, "times"+mmplan.getPlanRepeatFrequency());
+                Log.d(TAG, "planName "+mPlan.getPlanName());
+                Log.d(TAG, "planName "+mmplan.getPlanName());
+                mDBManager.closeDB();
                 getActivity().finish();
             }
         });
@@ -224,16 +235,10 @@ public class GroupPlanFragment  extends Fragment{
     @Override
     public void onResume() {
         super.onResume();
-        mPlan.setPlanName(planName.getText().toString());
-        mDBManager.updatePlan(mPlan);
-        mDBManager.updateGroup(mGroup);
     }
     @Override
     public void onDestroy() {
         super.onDestroy();
-        mPlan.setPlanName(planName.getText().toString());
-        mDBManager.updatePlan(mPlan);
-        mDBManager.updateGroup(mGroup);
         mDBManager.closeDB();
     }
 }

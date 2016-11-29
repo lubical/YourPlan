@@ -53,7 +53,7 @@ public class Plan {
         planRemindTime = new Date(planStartTime.getTime()+60000);
         planImportantUrgent = IMPORTANT_URGENT;
         planClassify = "未分组";
-        planName = new String("New");
+        planName = new String("NewPlan");
     }
     public int getPlanImportantUrgent() {
         return planImportantUrgent;

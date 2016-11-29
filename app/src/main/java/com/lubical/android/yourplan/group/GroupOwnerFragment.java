@@ -8,6 +8,8 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ListFragment;
 import android.support.v4.app.NavUtils;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.ActionMode;
 import android.view.ContextMenu;
@@ -37,6 +39,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
+
+import static android.icu.lang.UCharacter.GraphemeClusterBreak.L;
+import static android.icu.lang.UCharacter.GraphemeClusterBreak.T;
+import static com.lubical.android.yourplan.R.string.account;
 
 /**
  * Created by lubical on 2016/11/22.
@@ -70,15 +76,11 @@ public class GroupOwnerFragment extends ListFragment {
         }
         mDBManager = new DBManager(getActivity());
         groupId = UUID.fromString(getArguments().getString(EXTRA_GROUP_ID));
-        Log.d(TAG, " gourpId="+groupId);
         mGroup = mDBManager.getGroup(groupId);
         mAccount = mDBManager.getAccount(mGroup.getGroupOwnerId());
         mPlan = mDBManager.getPlan(mGroup.getGroupPlanId());
         groupMemberMapList = mDBManager.getAccountMapList(groupId);
-        for (HashMap<String,Object> map:groupMemberMapList) {
-            Log.d(TAG,"groupUser "+map.get(Account.ACCOUNT_NAME));
-        }
-        Log.d(TAG, "groupMember"+groupMemberMapList.size());
+
         mSimpleAdapter = new SimpleAdapter(
                 getActivity(),
                 groupMemberMapList,
@@ -94,16 +96,32 @@ public class GroupOwnerFragment extends ListFragment {
             mDBManager.updateGroup(mGroup);
             mDBManager.addPlan(mPlan);
         }
-        Log.d(TAG, "groupId"+mGroup.getGroupId());
+
     }
 
     @Override
-    public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(final LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_group_owner, null);
-        planName = (TextView)v.findViewById(R.id.group_owner_planName);
+        planName = (TextView) v.findViewById(R.id.group_owner_planName);
         planName.setText(mPlan.getPlanName());
-        groupName = (TextView)v.findViewById(R.id.group_owner_groupName);
+        groupName = (EditText)v.findViewById(R.id.group_owner_groupName);
         groupName.setText(mGroup.getGroupName());
+        groupName.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                mGroup.setGroupName(s.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
         planTimes = (TextView)v.findViewById(R.id.group_owner_planTimes);
         planTimes.setText(Integer.toString(mPlan.getPlanStatue())+"/"+Integer.toString(mPlan.getPlanRepeatFrequency()));
         planDuring = (TextView)v.findViewById(R.id.group_owner_planDuring);
@@ -121,6 +139,10 @@ public class GroupOwnerFragment extends ListFragment {
                 mywork.setText(Integer.toString(mAccount.getGroupTaskState()));
                 Toast.makeText(getActivity(),"今日完成",Toast.LENGTH_SHORT);
                 planTimes.setText(Integer.toString(mPlan.getPlanStatue())+"/"+Integer.toString(mPlan.getPlanRepeatFrequency()));
+                mDBManager.updateAccount(mAccount);
+                mDBManager.updatePlan(mPlan);
+                groupMemberMapList.clear();
+                groupMemberMapList.addAll(mDBManager.getAccountMapList(groupId));
                 mSimpleAdapter.notifyDataSetChanged();
             }
         });
@@ -128,6 +150,9 @@ public class GroupOwnerFragment extends ListFragment {
         planEditBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mDBManager.updatePlan(mPlan);
+                mDBManager.updateGroup(mGroup);
+                mDBManager.updateAccount(mAccount);
                 Intent intent = new Intent(getActivity(), GroupPlanActivity.class);
                 intent.putExtra(GroupPlanFragment.EXTRA_GROUP_PLAN_ID,mPlan.getPlanID().toString());
                 startActivity(intent);
@@ -156,7 +181,7 @@ public class GroupOwnerFragment extends ListFragment {
                 @Override
                 public boolean onCreateActionMode(ActionMode mode, Menu menu) {
                     MenuInflater inflater1 = mode.getMenuInflater();
-                    inflater1.inflate(R.menu.plan_list_item_context, menu);
+                    inflater1.inflate(R.menu.groupmember_list_item_context, menu);
                     return true;
                 }
 
@@ -173,10 +198,13 @@ public class GroupOwnerFragment extends ListFragment {
                                 if (getListView().isItemChecked(i)) {
                                     HashMap<String, Object> map = groupMemberMapList.get(i);
                                     String userId = map.get(Account.ACCOUNT_USER_ID).toString();
+                                    if (mAccount.getUserId().equals(userId)) continue;//自己不应删除
                                     Account account = mDBManager.getAccount(userId);
                                     account.setGroupId(UUID.randomUUID());
                                     account.setGroupTaskState(0);
                                     account.setGroupTaskReward(0);
+                                    mGroup.setGroupMemberCount(mGroup.getGroupMemberCount()-1);
+                                    mDBManager.updateGroup(mGroup);
                                     mDBManager.updateAccount(account);
                                     groupMemberMapList.remove(i);
                                 }
@@ -212,10 +240,13 @@ public class GroupOwnerFragment extends ListFragment {
             case R.id.menu_item_delete_groupMember:
                 String userId = map.get(Account.ACCOUNT_USER_ID).toString();
                 Account account = mDBManager.getAccount(userId);
+                mGroup.setGroupMemberCount(mGroup.getGroupMemberCount()-1);
                 account.setGroupId(UUID.randomUUID());
                 account.setGroupTaskState(0);
                 account.setGroupTaskReward(0);
                 mDBManager.updateAccount(account);
+                mDBManager.updateGroup(mGroup);
+                groupMemberMapList.remove(position);
                 mSimpleAdapter.notifyDataSetChanged();
                 return true;
         }
@@ -249,6 +280,9 @@ public class GroupOwnerFragment extends ListFragment {
                 mGroup.setGroupPlanRewardTimes(mGroup.getGroupPlanRewardTimes()-1);
                 mDBManager.updateAccount(mAccount);
                 mDBManager.updateGroup(mGroup);
+                groupMemberMapList.clear();
+                groupMemberMapList.addAll(mDBManager.getAccountMapList(groupId));
+                mSimpleAdapter.notifyDataSetChanged();
                 dialog.dismiss();
             }
         });
@@ -266,6 +300,7 @@ public class GroupOwnerFragment extends ListFragment {
         switch (item.getItemId()) {
             case android.R.id.home:
                 if (NavUtils.getParentActivityName(getActivity()) != null) {
+                    mDBManager.updateGroup(mGroup);
                     mDBManager.updatePlan(mPlan);
                     mDBManager.updateAccount(mAccount);
                     NavUtils.navigateUpFromSameTask(getActivity());
@@ -278,8 +313,18 @@ public class GroupOwnerFragment extends ListFragment {
     @Override
     public void onResume() {
         super.onResume();
-        mDBManager.updatePlan(mPlan);
+        mGroup = mDBManager.getGroup(groupId);
+        mPlan = mDBManager.getPlan(mGroup.getGroupPlanId());
+        planName.setText(mPlan.getPlanName());
+        groupName.setText(mGroup.getGroupName());
+        planTimes.setText(Integer.toString(mPlan.getPlanStatue())+"/"+Integer.toString(mPlan.getPlanRepeatFrequency()));
+        String startDate = DateTimePickerFragment.format.format(mPlan.getPlanStartTime());
+        String endDate = DateTimePickerFragment.format.format(mPlan.getPlanEndTime());
+        planDuring.setText(startDate+">"+ endDate);
         mDBManager.updateAccount(mAccount);
+        groupMemberMapList.clear();
+        groupMemberMapList.addAll(mDBManager.getAccountMapList(groupId));
+        mSimpleAdapter.notifyDataSetChanged();
     }
 
     @Override

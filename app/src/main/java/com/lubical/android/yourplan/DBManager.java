@@ -259,10 +259,10 @@ public class DBManager {
         }
     }
     public void deleteGroup(String groupId) {
-        db.delete("MGroup","groupId=",new String[]{groupId});
+        db.delete("MGroup","groupId=?",new String[]{groupId});
     }
     public void deleteGroup(Group group) {
-        db.delete("MGroup","groupId=",new String[]{group.getGroupId().toString()});
+        db.delete("MGroup","groupId=?",new String[]{group.getGroupId().toString()});
     }
     public void updateGroup(Group group) {
         ContentValues cv = new ContentValues();
@@ -322,7 +322,6 @@ public class DBManager {
     public List<Group> getGroups(String name) {
         List<Group> groups = new ArrayList<Group>();
         Cursor c = db.rawQuery("SELECT * FROM MGroup where groupName like ? or groupId=?",new String[]{name,name});
-//        Log.d(TAG,"first group"+c.getString(0));
         while(c.moveToNext()) {
             Log.d(TAG,"after first group"+c.getString(0));
             Group mGroup = new Group();
@@ -401,13 +400,13 @@ public class DBManager {
     }
     public void updatePlan(Plan plan) {
         ContentValues cv = new ContentValues();
-        cv.put(Plan.USER_ID,plan.getUserID());
-        cv.put(Plan.PLAN_NAME,plan.getPlanName());
+        cv.put(Plan.USER_ID, plan.getUserID());
+        cv.put(Plan.PLAN_NAME, plan.getPlanName());
         cv.put(Plan.PLAN_START_TIME, plan.getPlanStartTime().getTime());
-        cv.put(Plan.PLAN_REMIND_TIME,plan.getPlanRemindTime().getTime());
-        cv.put(Plan.PLAN_END_TIME,plan.getPlanEndTime().getTime());
-        cv.put(Plan.PLAN_REPEATFREQUENCY,plan.getPlanRepeatFrequency());
-        cv.put(Plan.PLAN_STATUE,plan.getPlanStatue());
+        cv.put(Plan.PLAN_REMIND_TIME, plan.getPlanRemindTime().getTime());
+        cv.put(Plan.PLAN_END_TIME, plan.getPlanEndTime().getTime());
+        cv.put(Plan.PLAN_REPEATFREQUENCY, plan.getPlanRepeatFrequency());
+        cv.put(Plan.PLAN_STATUE, plan.getPlanStatue());
         cv.put(Plan.PLAN_IMPORT_URGENT, plan.getPlanImportantUrgent());
         cv.put(Plan.PLAN_CLASSIFY, plan.getPlanClassify());
         db.update("Plan",cv,"planId=?",new String[]{plan.getPlanID().toString()});

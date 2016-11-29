@@ -26,21 +26,21 @@ import java.util.List;
 import java.util.UUID;
 
 import static com.lubical.android.yourplan.R.string.groupName;
+import static com.lubical.android.yourplan.group.GroupOwnerFragment.EXTRA_GROUP_ID;
 
 /**
  * Created by lubical on 2016/11/22.
  */
 
 public class GroupMemberFragment extends ListFragment {
-    public static final String EXTRA_GROUP_ID = "groupowner.groupId";
+    public static final String EXTRA_USER_ID = "groupMember.userId";
     private static final String TAG = "GroupOwner";
+    private String userId;
     private Plan mPlan;
     private Group mGroup;
     private Account mAccount;
     private UUID groupId;
-    private Button planEditBtn;
     private Button tickBtn;
-    private Button applyDealBtn;
     private TextView planName;
     private TextView planTimes;
     private TextView planDuring;
@@ -57,12 +57,12 @@ public class GroupMemberFragment extends ListFragment {
             getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
         }
         mDBManager = new DBManager(getActivity());
-        groupId = UUID.fromString(getArguments().getString(EXTRA_GROUP_ID));
+        userId = getArguments().getString(EXTRA_USER_ID);
+        mAccount = mDBManager.getAccount(userId);
+        groupId = mAccount.getGroupId();
         mGroup = mDBManager.getGroup(groupId);
-        mAccount = mDBManager.getAccount(mGroup.getGroupOwnerId());
         mPlan = mDBManager.getPlan(mGroup.getGroupPlanId());
         groupMemberMapList = mDBManager.getAccountMapList(groupId);
-
         mSimpleAdapter = new SimpleAdapter(
                 getActivity(),
                 groupMemberMapList,
@@ -97,24 +97,42 @@ public class GroupMemberFragment extends ListFragment {
                 mywork.setText(Integer.toString(mAccount.getGroupTaskState()));
                 Toast.makeText(getActivity(),"今日完成",Toast.LENGTH_SHORT);
                 planTimes.setText(Integer.toString(mPlan.getPlanStatue())+"/"+Integer.toString(mPlan.getPlanRepeatFrequency()));
+                mDBManager.updateAccount(mAccount);
+                mDBManager.updatePlan(mPlan);
+                groupMemberMapList.clear();
+                groupMemberMapList.addAll(mDBManager.getAccountMapList(groupId));
                 mSimpleAdapter.notifyDataSetChanged();
             }
         });
 
         return v;
     }
-    
+    public static GroupMemberFragment newInstance(String userId) {
+        Bundle args = new Bundle();
+        args.putSerializable(EXTRA_USER_ID, userId);
+        GroupMemberFragment fragment = new GroupMemberFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
                 if (NavUtils.getParentActivityName(getActivity()) != null) {
-
+                    mDBManager.updateAccount(mAccount);
+                    mDBManager.updatePlan(mPlan);
                     NavUtils.navigateUpFromSameTask(getActivity());
                     return true;
                 }
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mDBManager.updateAccount(mAccount);
+        mDBManager.updatePlan(mPlan);
+        mDBManager.closeDB();
     }
 }

@@ -71,10 +71,10 @@ public class ShareListFragment extends ListFragment{
                 getActivity(),
                 mShareMapList,
                 R.layout.list_item_share,
-                new String[]{"planName","statue","name","thumbUpCount","commentCount"},
+                new String[]{"planName","statue","name","thumbUpCount","commentCount","message"},
                 new int[]{R.id.list_item_share_planNameTv,R.id.list_item_share_planStatueTv,
                         R.id.list_item_share_planUserTv,R.id.list_item_share_thumbUpCountTv,
-                        R.id.list_item_share_commentCountTv}
+                        R.id.list_item_share_commentCountTv, R.id.list_item_share_messageTv}
         );
         setListAdapter(mSimpleAdapter);
         Log.d(TAG, " size "+mShareMapList.size());
@@ -202,7 +202,6 @@ public class ShareListFragment extends ListFragment{
                         reviewAdapter.notifyDataSetChanged();
                         mSimpleAdapter.notifyDataSetChanged();
                     }
-                    //showComment.setVisibility(View.INVISIBLE);
                 }
             });
             return v;

@@ -10,6 +10,7 @@ import com.lubical.android.yourplan.SingleFragmentActivity;
 
 public class GroupMemberActivity extends SingleFragmentActivity {
     public Fragment createFragment() {
-        return new GroupMemberFragment();
+        String userId = getIntent().getStringExtra(GroupMemberFragment.EXTRA_USER_ID);
+        return GroupMemberFragment.newInstance(userId);
     }
 }

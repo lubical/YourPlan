@@ -95,6 +95,7 @@ public class GroupFragment extends Fragment {
             } else {
                 Log.d(TAG, "joined a group"+userId);
                 Intent i = new Intent(getActivity(),GroupMemberActivity.class);
+                i.putExtra(GroupMemberFragment.EXTRA_USER_ID,userId);
                 startActivity(i);
             }
         }

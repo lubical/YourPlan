@@ -6,6 +6,7 @@ import android.support.v4.app.ListFragment;
 import android.support.v4.app.NavUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -43,8 +44,6 @@ public class GroupSearchFragment extends ListFragment {
             getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
         }
         mDBManager = new DBManager(getActivity());
-
-        Log.d(TAG, "groupSearchFragment");
         mGroups = mDBManager.getGroups();
         GroupAdapter adapter = new GroupAdapter(mGroups);
         userId = getArguments().getString(USER_ID);
@@ -92,7 +91,7 @@ public class GroupSearchFragment extends ListFragment {
             TextView titleTextView = (TextView)convertView.findViewById(R.id.list_item_group_id);
             titleTextView.setText(mGroup.getGroupName());
             TextView numberTextView = (TextView)convertView.findViewById(R.id.list_item_group_number);
-            numberTextView.setText("成员数:"+mGroup.getGroupMemberCount());
+            numberTextView.setText(Integer.toString(mGroup.getGroupMemberCount()));
 
             return convertView;
         }
@@ -111,7 +110,19 @@ public class GroupSearchFragment extends ListFragment {
         }
         Log.d(TAG, "group apply success"+group.getGroupId()+userId);
     }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                if (NavUtils.getParentActivityName(getActivity()) != null) {
 
+                    NavUtils.navigateUpFromSameTask(getActivity());
+                    return true;
+                }
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
     @Override
     public void onResume() {
         super.onResume();

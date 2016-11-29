@@ -43,9 +43,7 @@ public class GroupApplyDealFragment extends ListFragment {
         }
         mDBManager = new DBManager(getActivity());
         getGruopId = getArguments().getString(GRUOP_ID);
-        Log.d("GADeal", getGruopId);
         mGroupApplyMapList = mDBManager.getGroupApplyMapList(UUID.fromString(getGruopId));
-        Log.d("GADeal", "size "+mGroupApplyMapList.size());
         mGroupApplySimpleAdapter = new GroupApplySimpleAdapter(
                 getActivity(),
                 mGroupApplyMapList,
@@ -91,7 +89,11 @@ public class GroupApplyDealFragment extends ListFragment {
                 public void onClick(View v) {
                     Account account = mDBManager.getAccount(userId);
                     account.setGroupId(groupId);
+                    Group group = mDBManager.getGroup(groupId);
+                    group.setGroupMemberCount(group.getGroupMemberCount()+1);
                     account.setGroupTaskState(0);
+                    account.setGroupTaskReward(0);
+                    mDBManager.updateGroup(group);
                     mDBManager.updateAccount(account);
                     mDBManager.deleteGroupApply(userId, groupId);
                     mGroupApplyMapList.remove(position);

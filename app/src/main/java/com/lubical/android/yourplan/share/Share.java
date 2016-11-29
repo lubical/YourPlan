@@ -30,6 +30,9 @@ public class Share {
         this.groupId = groupId;
         this.planId = planId;
         this.userId = userId;
+        if (message.length()<1) {
+            message = "分享是最大的收获(默认)";
+        }
         this.message = message;
         time = new Date().getTime();
         thumbUpCount = 0;

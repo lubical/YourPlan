@@ -20,4 +20,8 @@
     <string name="groupName">群名</string>
     <string name="member">成员人数</string>
     <string name="commentCount">当前点赞数</string>
+    <string name="NI_NU">不重要不紧急</string>
+    <string name="I_NU">重要-不紧急</string>
+    <string name="NI_U">不重要-紧急</string>
+    <string name="I_U">重要-紧急</string>
 </resources>

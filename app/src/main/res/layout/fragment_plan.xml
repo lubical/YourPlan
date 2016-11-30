@@ -32,7 +32,7 @@
                 android:layout_weight="1"
                 android:layout_gravity="center"
                 android:layout_height="wrap_content"
-                android:text="I_U"
+                android:text="@string/I_U"
                 android:textColor="@color/tab_selector_iu_color"
                 android:background="@null"/>
             <RadioButton
@@ -42,7 +42,7 @@
                 android:layout_weight="1"
                 android:layout_gravity="center"
                 android:layout_height="wrap_content"
-                android:text="UnI_U"
+                android:text="@string/NI_U"
                 android:textColor="@color/tab_selector_niu_color"
                 android:background="@null"/>
             <RadioButton
@@ -52,7 +52,7 @@
                 android:layout_weight="1"
                 android:layout_gravity="center"
                 android:layout_height="wrap_content"
-                android:text="I_NotU"
+                android:text="@string/I_NU"
                 android:textColor="@color/tab_selector_inu_color"
                 android:background="@null"/>
             <RadioButton
@@ -62,7 +62,7 @@
                 android:layout_weight="1"
                 android:layout_gravity="center"
                 android:layout_height="wrap_content"
-                android:text="UnI_NotU"
+                android:text="@string/NI_NU"
                 android:textColor="@color/tab_selector_ninu_color"
                 android:background="@null"/>
         </RadioGroup>

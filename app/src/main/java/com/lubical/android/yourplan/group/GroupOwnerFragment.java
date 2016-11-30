@@ -134,6 +134,7 @@ public class GroupOwnerFragment extends ListFragment {
         tickBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mAccount = mDBManager.getAccount(mGroup.getGroupOwnerId());
                 mAccount.setGroupTaskState(mAccount.getGroupTaskState()+1);
                 mPlan.setPlanStatue(mPlan.getPlanStatue()+1);
                 mywork.setText(Integer.toString(mAccount.getGroupTaskState()));
